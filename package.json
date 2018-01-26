@@ -1,0 +1,30 @@
+{
+  "name": "viewar-cli",
+  "version": "0.1.0",
+  "description": "ViewAR SDK Command Line Interface",
+  "main": "index.js",
+  "contributors": [
+    "Ivan Šakić <is@viewar.com>",
+    "Matthias Klan <mk@viewar.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viewar/viewar-cli.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "version": "npm run build && git add -A",
+    "postversion": "git push origin HEAD && git push --tags"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "bin": {
+    "viewar-cli": "index.js"
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "request": "^2.83.0",
+    "shelljs": "^0.8.1"
+  }
+}
