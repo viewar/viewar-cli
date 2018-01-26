@@ -1,6 +1,6 @@
 {
   "name": "viewar-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ViewAR SDK Command Line Interface",
   "main": "index.js",
   "contributors": [
@@ -13,16 +13,17 @@
   },
   "license": "MIT",
   "scripts": {
-    "version": "npm run build && git add -A",
+    "version": "git add -A",
     "postversion": "git push origin HEAD && git push --tags"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "bin": {
     "viewar-cli": "index.js"
   },
   "dependencies": {
+    "archiver": "^2.1.1",
     "chalk": "^2.3.0",
     "request": "^2.83.0",
     "shelljs": "^0.8.1"

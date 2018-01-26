@@ -2,6 +2,7 @@
 
 const chalk = require('chalk')
 const fs = require('fs')
+const archiver = require('archiver')
 const path = require('path')
 const shell = require('shelljs')
 
@@ -15,7 +16,7 @@ const args = process.argv.slice(2)
 
 console.log(chalk`{bold ViewAR SDK Command Line Interface v${currentVersion}}`)
 
-const latestVersion = shell.exec('npm show viewar-cli version', {silent: true}).stdout
+const latestVersion = shell.exec('npm show viewar-cli version', {silent: true}).stdout.trim()
 
 if (currentVersion !== latestVersion) {
   console.log(chalk`{bold 
@@ -85,11 +86,21 @@ Usage:
 }
 
 function zip (appRoot) {
-  shell.exec(`cd ${appRoot}/build && zip -r -q ${appRoot}/bundle.zip . && cd ${appRoot}`, {silent: true})
+  return new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(`${appRoot}/bundle.zip`)
+
+    output.on('close', resolve)
+    output.on('error', reject)
+
+    const archive = archiver('zip')
+    archive.pipe(output)
+    archive.directory(`${appRoot}/build/`, false)
+    archive.finalize()
+  })
 }
 
 async function deploy (version) {
-  zip(process.cwd())
+  await zip(process.cwd())
   const oldVersion = get('version')
   version && setVersion(version, {silent: true})
   const config = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), '.viewar-config'), 'utf8'))
@@ -128,11 +139,10 @@ function setToken (token, {silent} = {}) {
     const config = readConfig()
     if (!config) return
 
-    const newConfig = {
-      ...config,
+    const newConfig = Object.assign({}, config, {
       token,
       version: token.split('-')[1].split('_')[0],
-    }
+    })
 
     fs.writeFileSync(path.resolve(process.cwd(), '.viewar-config'), JSON.stringify(newConfig, null, '  '), 'utf8')
 
@@ -154,11 +164,10 @@ function setVersion (version, {silent} = {}) {
 
     const token = get('token')
 
-    const newConfig = {
-      ...config,
+    const newConfig = Object.assign({}, config, {
       token: token.split('-')[0] + '-' + version + '_' + token.split('_')[1],
       version,
-    }
+    })
 
     fs.writeFileSync(path.resolve(process.cwd(), '.viewar-config'), JSON.stringify(newConfig, null, '  '), 'utf8')
 
@@ -180,17 +189,20 @@ function init (projectName, type, token) {
 
   console.log(chalk.bold('\nDownloading boilerplate project...'))
 
-  shell.exec(`git clone -b master ${repo} ./temp && mv ./temp/${type}/* . && rm -rf temp && git init`, {silent: true})
+  shell.exec(`git clone -b master ${repo} temp`, {silent: true})
+  shell.mv(`./temp/${type}/*`, `.`)
+  shell.rm('-rf', 'temp')
+  shell.exec('git init', {silent: true})
 
   console.log(chalk.bold('\nInstalling dependencies...'))
 
-  shell.exec(`npm install`, {silent: true})
+  shell.exec('npm install', {silent: true})
 
   const packageInfo = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8'))
 
   Object.assign(packageInfo, {
     name: projectName,
-    version: "0.1.0",
+    version: '0.1.0',
     description: '',
   })
 
