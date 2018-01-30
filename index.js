@@ -13,6 +13,10 @@ const currentVersion = packageInfo.version
 
 const repo = 'https://github.com/viewar/viewar-boilerplate.git'
 
+const gitIgnore = `node_modules/
+.viewar-config
+`
+
 //======================================================================================================================
 
 ;(async function () {
@@ -35,6 +39,7 @@ A newer version is available: ${latestVersion}!} Update now by running:
         printUsage()
         break
       case 'init':
+      case 'init-vanilla':
         await init(args[1], 'vanilla', args[2])
         break
       case 'init-react':
@@ -69,14 +74,6 @@ A newer version is available: ${latestVersion}!} Update now by running:
 
 //======================================================================================================================
 
-function displayVersion () {
-  console.log(`Current app version is ${chalk.green(get('version'))}`)
-}
-
-function displayToken () {
-  console.log(`Current app token is ${chalk.green(get('token'))}`)
-}
-
 function printUsage () {
   console.log(chalk`
 Usage:
@@ -95,18 +92,61 @@ Usage:
 `)
 }
 
-function zip (appRoot) {
-  return new Promise((resolve, reject) => {
-    const output = fs.createWriteStream(`${appRoot}/bundle.zip`)
+async function init (projectName, type, token) {
+  const projectDir = createProjectDir(projectName)
+  shell.cd(projectDir)
 
-    output.on('close', resolve)
-    output.on('error', reject)
+  console.log(chalk.bold('\nDownloading boilerplate project...'))
 
-    const archive = archiver('zip', {})
-    archive.pipe(output)
-    archive.directory(`${appRoot}/build/`, false)
-    archive.finalize()
+  shell.exec(`git clone -b master ${repo} temp`, {silent: true})
+  shell.mv(`./temp/${type}/*`, `.`)
+  shell.rm('-rf', 'temp')
+
+  console.log(chalk.bold('\nInstalling dependencies...'))
+
+  shell.exec('npm install', {silent: true})
+
+  console.log(chalk.bold('\nInitializing git repository...'))
+
+  shell.exec('git init', {silent: true})
+  fs.writeFileSync('.gitignore', gitIgnore, 'utf8')
+
+  Object.assign(packageInfo, {
+    name: projectName,
+    version: '0.1.0',
+    description: '',
   })
+
+  writeJson(path.resolve(process.cwd(), 'package.json'), packageInfo)
+
+  const config = {
+    token: token || `${Math.random().toString(36).slice(2)}-0.1.0_${Math.random().toString(36).slice(2)}`,
+    version: '0.1.0',
+  }
+
+  writeJson(path.resolve(process.cwd(), '.viewar-config'), config)
+
+  console.log(chalk`
+{bold Done!}
+  Your app token is: {green ${config.token}}
+  Add the token in the settings at {red developer.viewar.com}
+  After that, enter the new project directory by running {green cd ${projectName}}
+  Run {green npm start} to start the development server (defaults to {green localhost:8080 })
+  Open {green /src/index.js} to begin editing your app.`)
+}
+
+function createProjectDir (projectName) {
+  const projectDir = path.join(process.cwd(), projectName)
+
+  try {
+    fs.statSync(projectDir)
+  } catch (error) {
+    fs.mkdirSync(projectDir)
+    return projectDir
+  }
+
+  throw new Error(`A ${(stat.isDirectory() ? 'directory'
+    : 'file')} named ${projectName} already exists! Exiting without creating a new project.`)
 }
 
 async function deploy (version) {
@@ -122,6 +162,39 @@ async function deploy (version) {
   shell.rm('-rf', `${process.cwd()}/bundle.zip`)
   shell.rm('-rf', `${process.cwd()}/build`)
   console.log(chalk`{bold Done!}`)
+}
+
+function zip (appRoot) {
+  return new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(`${appRoot}/bundle.zip`)
+
+    output.on('close', resolve)
+    output.on('error', reject)
+
+    const archive = archiver('zip', {})
+    archive.pipe(output)
+    archive.directory(`${appRoot}/build/`, false)
+    archive.finalize()
+  })
+}
+
+function uploadBundle (token, path) {
+  return new Promise((resolve, reject) => {
+    const url = 'http://dev2.viewar.com/resources/AppfilesUpload'
+    const formData = {
+      token,
+      file: fs.createReadStream(path),
+    }
+    request.post({url, formData}, (error) => error ? reject(error) : resolve())
+  })
+}
+
+function displayVersion () {
+  console.log(`Current app version is ${chalk.green(get('version'))}`)
+}
+
+function displayToken () {
+  console.log(`Current app token is ${chalk.green(get('token'))}`)
 }
 
 function get (property) {
@@ -186,68 +259,4 @@ Do not forget to update the token in the settings at {red developer.viewar.com}`
 
 function writeJson (filename, object) {
   fs.writeFileSync(filename, JSON.stringify(object, null, '  '), 'utf8')
-}
-
-async function init (projectName, type, token) {
-  const projectDir = createProjectDir(projectName)
-  shell.cd(projectDir)
-
-  console.log(chalk.bold('\nDownloading boilerplate project...'))
-
-  shell.exec(`git clone -b master ${repo} temp`, {silent: true})
-  shell.mv(`./temp/${type}/*`, `.`)
-  shell.rm('-rf', 'temp')
-  shell.exec('git init', {silent: true})
-
-  console.log(chalk.bold('\nInstalling dependencies...'))
-
-  shell.exec('npm install', {silent: true})
-
-  Object.assign(packageInfo, {
-    name: projectName,
-    version: '0.1.0',
-    description: '',
-  })
-
-  writeJson(path.resolve(process.cwd(), 'package.json'), packageInfo)
-
-  const config = {
-    token: token || `${Math.random().toString(36).slice(2)}-0.1.0_${Math.random().toString(36).slice(2)}`,
-    version: '0.1.0',
-  }
-
-  writeJson(path.resolve(process.cwd(), '.viewar-config'), config)
-
-  console.log(chalk`
-Done!
-  Your app token is: {green ${config.token}}
-  Add the token in the settings at {red developer.viewar.com}
-  After that, enter the new project directory by running {green cd \`${projectName}\`}
-  Run {green \`npm start\`} to start the development server
-  From there, browse to {green localhost:8080 }
-  Open {green \`/src/index.js\`} to begin editing your app.`)
-}
-
-function createProjectDir (projectName) {
-  const projectDir = path.join(process.cwd(), projectName)
-
-  const stat = fs.statSync(projectDir)
-  if (!stat) {
-    fs.mkdirSync(projectDir)
-    return projectDir
-  } else {
-    throw new Error(`A ${(stat.isDirectory() ? 'directory'
-      : 'file')} named ${projectName} already exists! Exiting without creating a new project.`)
-  }
-}
-
-function uploadBundle (token, path) {
-  return new Promise((resolve, reject) => {
-    const url = 'http://dev2.viewar.com/resources/AppfilesUpload'
-    const formData = {
-      token,
-      file: fs.createReadStream(path),
-    }
-    request.post({url, formData}, (error) => error ? reject(error) : resolve())
-  })
 }
