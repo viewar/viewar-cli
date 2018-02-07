@@ -4,18 +4,19 @@ const path = require('path')
 const { getAppConfigUrl, getActivateUrl, getUploadBundleUrl } = require('../common/urls')
 const { cliConfigPath } = require('../common/constants')
 
-module.exports = ({fs, shell, zipDirectory, uploadBundle, readJson, request}) => async (appId, version) => {
+module.exports = ({fs, shell, zipDirectory, readJson, request}) => async (appId, version) => {
   const appRoot = process.cwd()
   const buildDir = path.resolve(appRoot, 'build') + '/'
   const bundlePath = path.resolve(appRoot, 'bundle.zip')
   const appInfoPath = path.resolve(appRoot, '.viewar-config')
 
   console.log(chalk`Bundling app...`)
+
   shell.exec('npm run build', {silent: true})
   await zipDirectory(buildDir, bundlePath)
 
   const {id, token} = readJson(appInfoPath)
-  const timestamp = Date.now()
+  const timestamp = new Date().toISOString().replace(/:/g, '-').replace('T', '--').replace(/\..*$/, '')
 
   console.log(chalk`Uploading app bundle...`)
 
@@ -32,6 +33,7 @@ module.exports = ({fs, shell, zipDirectory, uploadBundle, readJson, request}) =>
   shell.rm('-rf', buildDir)
 
   console.log(chalk`Activating bundle...`)
+
   const info = await request.post(getAppConfigUrl(appId, version)).then(JSON.parse)
 
   if (!info) {

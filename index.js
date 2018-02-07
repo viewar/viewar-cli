@@ -1,9 +1,14 @@
 #!/usr/bin/env node
 
 const program = require('commander')
+const shell = require('shelljs')
 
 const currentVersion = require('./package.json').version
 const { deploy, init, list, login, logout, whoami } = require('./commands')
+
+if (!shell.test('-f', '~/.viewar-cli')) {
+  shell.exec('echo "{}" > ~/.viewar-cli')
+}
 
 program.version(currentVersion)
 
@@ -13,7 +18,7 @@ program
   .action(init)
 
 program
-  .command('login <username> <password>')
+  .command('login')
   .description('Logs in user')
   .action(login)
 
