@@ -16,7 +16,7 @@ module.exports = ({fs, shell, zipDirectory, readJson, request}) => async (appId,
   await zipDirectory(buildDir, bundlePath)
 
   const {id, token} = readJson(appInfoPath)
-  const timestamp = new Date().toISOString().replace(/:/g, '-').replace('T', '--').replace(/\..*$/, '')
+  const timestamp = new Date().toISOString().replace(/\..*$/, '').replace(/[-T:]/g, '')
 
   console.log(chalk`Uploading app bundle...`)
 
