@@ -9,6 +9,7 @@ const {readJson, updateJson, writeJson} = require('../common/json')
 const activate = require('./activate')({request, readJson})
 const deploy = require('./deploy')({fs, shell, zipDirectory, readJson, request})
 const init = require('./init')({shell, updateJson, writeJson, fs})
+const initSample = require('./init-sample')({shell, updateJson, writeJson, fs})
 const list = require('./list')({request, readJson})
 const login = require('./login')({request, updateJson})
 const logout = require('./logout')({request, updateJson})
@@ -18,6 +19,7 @@ module.exports = {
   activate,
   deploy,
   init,
+  initSample,
   list,
   login,
   logout,

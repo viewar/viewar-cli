@@ -4,10 +4,13 @@ const getActivateUrl = (token, appId, version, appToken) => `http://dev2.viewar.
 const getUploadBundleUrl = () => `http://dev2.viewar.com/api40/appfilesUpload`
 const getAppConfigUrl = (appId, version) => `http://api.viewar.com/api20/configuration/bundleidentifier:${appId}/version:${version}`
 
+const getRepositoryUrl = (templateName) => `https://github.com/viewar/viewar-template-${templateName}.git`
+
 module.exports = {
   getActivateUrl,
   getAppConfigUrl,
   getListAppsUrl,
   getLoginUrl,
+  getRepositoryUrl,
   getUploadBundleUrl,
 }
