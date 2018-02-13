@@ -43,7 +43,7 @@ program
   .action(list)
 
 program
-  .command('deploy <app-id> <version>')
+  .command('deploy <app-id> <version> [tags]')
   .description('Deploys the project')
   .action(deploy)
 

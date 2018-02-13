@@ -7,7 +7,7 @@ const zipDirectory = require('../common/zip-dir')({fs, archiver})
 const {readJson, updateJson, writeJson} = require('../common/json')
 
 const activate = require('./activate')({request, readJson})
-const deploy = require('./deploy')({fs, shell, zipDirectory, readJson, request})
+const deploy = require('./deploy')({fs, shell, zipDirectory, readJson, writeJson, request})
 const init = require('./init')({shell, updateJson, writeJson, fs})
 const initSample = require('./init-sample')({shell, updateJson, writeJson, fs})
 const list = require('./list')({request, readJson})
