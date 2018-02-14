@@ -22,7 +22,7 @@ module.exports = ({fs, shell, zipDirectory, readJson, writeJson, request}) => as
   const [commit, author, subject] = shell.exec('git log --format=\'%H||%an <%ae>||%s\' HEAD^! | cat', {silent: true}).stdout.trim().split('||')
 
   writeJson(bundleInfoPath, {
-    tags: tags.split(','),
+    tags: tags ? tags.split(',') : [],
     apiVersion: apiPackageInfo['version'],
     coreVersion: corePackageInfo['version'],
     git: {
