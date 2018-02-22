@@ -1,7 +1,10 @@
+const request = require('request-promise')
+
+const { readJson } = require('../common/json')
 const { getListAppsUrl } = require('../common/urls')
 const { cliConfigPath } = require('../common/constants')
 
-module.exports = ({request, readJson}) => async (username) => {
+module.exports = async (username) => {
   const data = readJson(cliConfigPath)
 
   const entry = Object.values(data.users || {}).find((user) => user.name === username)

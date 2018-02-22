@@ -1,10 +1,15 @@
 const chalk = require('chalk')
 const path = require('path')
+const fs = require('fs')
+const shell = require('shelljs')
+const request = require('request-promise')
 
+const zipDirectory = require('../common/zip-dir')
+const { readJson, writeJson } = require('../common/json')
 const { getAppConfigUrl, getActivateUrl, getUploadBundleUrl } = require('../common/urls')
 const { cliConfigPath } = require('../common/constants')
 
-module.exports = ({fs, shell, zipDirectory, readJson, writeJson, request}) => async (appId, version, tags) => {
+module.exports = async (appId, version, tags) => {
   const appRoot = process.cwd()
   const buildDir = path.resolve(appRoot, 'build') + '/'
   const bundlePath = path.resolve(appRoot, 'bundle.zip')

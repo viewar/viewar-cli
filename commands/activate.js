@@ -1,9 +1,11 @@
 const path = require('path')
+const request = require('request-promise')
 
+const { readJson } = require('../common/json')
 const { getAppConfigUrl, getActivateUrl } = require('../common/urls')
 const { cliConfigPath } = require('../common/constants')
 
-module.exports = ({request, readJson}) => async (appId, version) => {
+module.exports = async (appId, version) => {
 
   const info = await request(getAppConfigUrl(appId, version)).then(JSON.parse)
 

@@ -1,11 +1,12 @@
 const chalk = require('chalk')
 const path = require('path')
+const shell = require('shelljs')
 
 const generateToken = require('../common/generate-token')
-
+const { updateJson, writeJson } = require('../common/json')
 const { getRepositoryUrl } = require('../common/urls')
 
-module.exports = ({shell, updateJson, writeJson}) => async (sampleName, directory) => {
+module.exports = async (sampleName, directory) => {
   const projectDir = path.resolve(process.cwd(), directory || sampleName)
   const packageInfoPath = path.resolve(projectDir, 'package.json')
   const cliConfigPath = path.resolve(projectDir, '.viewar-config')

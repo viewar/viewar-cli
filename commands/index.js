@@ -1,27 +1,10 @@
-const fs = require('fs')
-const shell = require('shelljs')
-const request = require('request-promise')
-const archiver = require('archiver')
-
-const zipDirectory = require('../common/zip-dir')({fs, archiver})
-const {readJson, updateJson, writeJson} = require('../common/json')
-
-const activate = require('./activate')({request, readJson})
-const deploy = require('./deploy')({fs, shell, zipDirectory, readJson, writeJson, request})
-const init = require('./init')({shell, updateJson, writeJson, fs})
-const initSample = require('./init-sample')({shell, updateJson, writeJson, fs})
-const list = require('./list')({request, readJson})
-const login = require('./login')({request, updateJson})
-const logout = require('./logout')({request, updateJson})
-const whoami = require('./whoami')({readJson})
-
 module.exports = {
-  activate,
-  deploy,
-  init,
-  initSample,
-  list,
-  login,
-  logout,
-  whoami,
+  activate: require('./activate'),
+  deploy: require('./deploy'),
+  init: require('./init'),
+  initSample: require('./init-sample'),
+  list: require('./list'),
+  login: require('./login'),
+  logout: require('./logout'),
+  whoami: require('./whoami'),
 }

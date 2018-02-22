@@ -13,7 +13,7 @@ if (!shell.test('-f', '~/.viewar-cli')) {
 program.version(currentVersion)
 
 program
-  .command('init [project-name] [type]')
+  .command('init [username] [type] [project-name]')
   .description('Prepares a new ViewAR project')
   .action(init)
 
@@ -23,9 +23,9 @@ program
   .action(initSample)
 
 program
-  .command('login')
+  .command('login [username]')
   .description('Logs in user')
-  .action(login)
+.action(login)
 
 program
   .command('logout <username>')
