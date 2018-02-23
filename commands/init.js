@@ -72,17 +72,11 @@ module.exports = async (username, projectType, projectName) => {
           name: 'Base6',
         },
         {
-          name: 'Furniture',
-        },
-        {
-          name: 'Architecture',
-        },
-        {
           name: 'Other...',
         },
       ],
       filter: (value) => value.toLowerCase(),
-      when: ({type}) => projectType === 'sample' || type === 'Sample project',
+      when: ({type}) => projectType === 'sample' || type === 'sample project',
     },
     {
       name: 'sampleUrl',
