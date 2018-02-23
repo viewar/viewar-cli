@@ -33,6 +33,8 @@ module.exports = async (username, projectType, projectName) => {
   if (username && !user) {
     exitWithError(`User ${username} is not logged in!`)
   }
+  
+  console.log(chalk`\nWelcome to the initialization process of a ViewAR app!`);
 
   const userToken = username && userList.find(user => user.name === username).token
 
@@ -40,7 +42,7 @@ module.exports = async (username, projectType, projectName) => {
     {
       name: 'token',
       type: 'list',
-      message: 'User',
+      message: 'Select the account for this app:',
       choices: userList,
       filter: (username) => userList.find(user => user.name === username).token,
       when: () => !username,
@@ -48,10 +50,10 @@ module.exports = async (username, projectType, projectName) => {
     {
       name: 'type',
       type: 'list',
-      message: 'Project type',
+      message: 'Select a project type:',
       choices: [
         {
-          name: 'Vanilla',
+          name: 'JavaScript Vanilla',
         },
         {
           name: 'React',
@@ -66,7 +68,7 @@ module.exports = async (username, projectType, projectName) => {
     {
       name: 'sample',
       type: 'list',
-      message: 'Sample project',
+      message: 'Select a sample project',
       choices: [
         {
           name: 'Base6',
@@ -94,13 +96,13 @@ module.exports = async (username, projectType, projectName) => {
     {
       name: 'appId',
       type: 'input',
-      message: 'App ID',
+      message: 'Enter the app bundle ID:',
       validate: (value) => /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value),
     },
     {
       name: 'version',
       type: 'input',
-      message: 'App version',
+      message: 'Enter the app version:',
       default: '1.0',
       //validate: (value) => /\d+(?:\.\d+(?:\.\d+)?)?/.test(value),
       validate: (value) => /\d+(?:\.\d+)?/.test(value),
