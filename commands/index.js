@@ -5,5 +5,6 @@ module.exports = {
   list: require('./list'),
   login: require('./login'),
   logout: require('./logout'),
+  set: require('./set'),
   whoami: require('./whoami'),
 }

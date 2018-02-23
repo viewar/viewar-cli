@@ -19,6 +19,8 @@ const projectTypes = {
 
 const sampleProjects = {
   'Base6': 'base6',
+  'QR Navigation': 'qrnavigation',
+  'Vanilla sample': 'vanilla',
   'Other...': 'other',
 }
 
