@@ -15,7 +15,7 @@ module.exports = async (userEmail) => {
     {
       type: 'input',
       message: 'Username',
-      name: 'userEmail',
+      name: 'email',
       validate: validateEmail,
       when: () => !validateEmail(userEmail)
     },
@@ -28,7 +28,7 @@ module.exports = async (userEmail) => {
 
   const passwordHash = hash.update(password).digest('hex')
 
-  const response = await request.post(getLoginUrl(userEmail, passwordHash)).then(JSON.parse)
+  const response = await request.post(getLoginUrl(email, passwordHash)).then(JSON.parse)
 
   const {status, userId, fullname: userName, token} = response
 
@@ -44,7 +44,7 @@ module.exports = async (userEmail) => {
 
       return config
     })
-    console.log(`User ${userName} <${userEmail}> logged in.`)
+    console.log(`User ${userName} <${email}> logged in.`)
   } else {
     exitWithError('Authentication failed! Wrong email or password!')
   }
