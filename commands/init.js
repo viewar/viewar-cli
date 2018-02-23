@@ -10,7 +10,18 @@ const { readJson, updateJson, writeJson } = require('../common/json')
 const { createAppUrl, getRepositoryUrl } = require('../common/urls')
 const { cliConfigPath: cliConfigFile, repositoryUrl } = require('../common/constants')
 
-module.exports = async (username, projectType, projectName) => {
+const projectTypes = {
+  'Vanilla Javascript': 'vanilla',
+  'React': 'react',
+  'Sample project': 'sample',
+}
+
+const sampleProjects = {
+  'Base6': 'base6',
+  'Other...': 'other',
+}
+
+module.exports = async (userEmail, projectType) => {
 
   const projectDir = path.resolve(process.cwd())
   const packageInfoPath = path.resolve(projectDir, 'package.json')
@@ -22,76 +33,62 @@ module.exports = async (username, projectType, projectName) => {
     exitWithError('Directory not empty!')
   }
 
+  const projectName = process.cwd().split(path.sep).pop()
+
   const userList = Object.values(readJson(cliConfigFile).users || {})
 
   if (userList.length === 0) {
-    exitWithError('There are no logged-in users! Run viewar-api login first!')
+    exitWithError('There are no users logged in! Run viewar-api login first!')
   }
 
-  const user = username && userList.find(user => user.name === username)
+  const enteredUser = userEmail && userList.find(user => user.email === userEmail)
 
-  if (username && !user) {
-    exitWithError(`User ${username} is not logged in!`)
+  if (userEmail && !enteredUser) {
+    exitWithError(`User with email ${userEmail} is not logged in!  Run viewar-api whoami to see which user accounts are logged in!`)
   }
   
-  console.log(chalk`\nWelcome to the initialization process of a ViewAR app!`);
+  console.log(chalk`\nWelcome to ViewAR app initialization process!\n`);
 
-  const userToken = username && userList.find(user => user.name === username).token
+  const user = enteredUser ? enteredUser : (userList.length === 1 ? userList[0] : null);
+
+  if (user) {
+    if (enteredUser) {
+      console.log(`Logged in as: ${user.name} <${user.email}>`)
+    } else {
+      console.log(`Only one user account found, using this one: ${user.name} <${user.email}>`)
+    }
+  }
 
   const answers = await inquirer.prompt([
     {
       name: 'token',
       type: 'list',
-      message: 'Select the account for this app:',
-      choices: userList,
-      filter: (username) => userList.find(user => user.name === username).token,
-      when: () => !username,
+      message: 'Select the user account for this app:',
+      choices: userList.map(({name, email}) => `${name} <${email}>`),
+      filter: (choice) => userList.find(({name, email}) => `${name} <${email}>` === choice).token,
+      when: () => !user,
     },
     {
       name: 'type',
       type: 'list',
       message: 'Select a project type:',
-      choices: [
-        {
-          name: 'JavaScript Vanilla',
-        },
-        {
-          name: 'React',
-        },
-        {
-          name: 'Sample project',
-        },
-      ],
-      filter: (value) => value.toLowerCase(),
+      choices: Object.keys(projectTypes),
+      filter: (value) => projectTypes[value],
       when: () => !projectType,
     },
     {
       name: 'sample',
       type: 'list',
       message: 'Select a sample project',
-      choices: [
-        {
-          name: 'Base6',
-        },
-        {
-          name: 'Other...',
-        },
-      ],
-      filter: (value) => value.toLowerCase(),
-      when: ({type}) => projectType === 'sample' || type === 'sample project',
+      choices: Object.keys(sampleProjects),
+      filter: (value) => sampleProjects[value],
+      when: ({type}) => projectType === projectTypes['Sample project'] || type === projectTypes['Sample project'],
     },
     {
       name: 'sampleUrl',
       type: 'input',
       message: 'Repository URL',
-      when: ({sample}) => sample === 'Other...',
-    },
-    {
-      name: 'name',
-      type: 'input',
-      message: 'Project name',
-      validate: (value) => value !== '',
-      when: () => !projectName,
+      when: ({sample}) => sample === sampleProjects['Other...'],
     },
     {
       name: 'appId',
@@ -125,10 +122,9 @@ module.exports = async (username, projectType, projectName) => {
     },
   ])
 
-  const {token, name, type, appId, version, trackers, sample, sampleUrl} = Object.assign({
-    token: userToken,
+  const {token, type, appId, version, trackers, sample, sampleUrl} = Object.assign({
+    token: user && user.token,
     type: projectType,
-    name: projectName,
   }, answers)
 
   const formData = {
@@ -167,7 +163,7 @@ module.exports = async (username, projectType, projectName) => {
   }
 
   updateJson(packageInfoPath, (object) => Object.assign(object, {
-    name,
+    name: projectName,
     description: '',
   }))
 
