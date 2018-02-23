@@ -3,23 +3,22 @@ const hash = crypto.createHash('md5')
 const inquirer = require('inquirer')
 const request = require('request-promise')
 
+const exitWithError = require('../common/exit-with-error')
 const { updateJson } = require('../common/json')
 const { cliConfigPath } = require('../common/constants')
 const { getLoginUrl } = require('../common/urls')
 
-module.exports = async (username) => {
-  const validateUsername = (value) => /.+@.+\..+/.test(value)
+module.exports = async (userEmail) => {
+  const validateEmail = (value) => /.+@.+\..+/.test(value)
 
-  username = validateUsername(username) ? username : await inquirer.prompt([
+  const {email = userEmail, password} = await inquirer.prompt([
     {
       type: 'input',
       message: 'Username',
-      name: 'username',
-      validate: validateUsername,
+      name: 'userEmail',
+      validate: validateEmail,
+      when: () => !validateEmail(userEmail)
     },
-  ]).username
-
-  const {password} = await inquirer.prompt([
     {
       type: 'password',
       message: 'Password',
@@ -29,23 +28,24 @@ module.exports = async (username) => {
 
   const passwordHash = hash.update(password).digest('hex')
 
-  const response = await request.post(getLoginUrl(username, passwordHash)).then(JSON.parse)
+  const response = await request.post(getLoginUrl(userEmail, passwordHash)).then(JSON.parse)
 
-  const {status, message, userId, token} = response
+  const {status, userId, fullname: userName, token} = response
 
   if (status === 'ok') {
     updateJson(cliConfigPath, (config) => {
       config.users = config.users || {}
       config.users[userId] = {
         id: userId,
-        name: username,
+        name: userName,
+        email: email,
         token,
       }
 
       return config
     })
-    console.log(`User ${username} logged in.`)
+    console.log(`User ${userName} <${userEmail}> logged in.`)
   } else {
-    throw new Error(message)
+    exitWithError('Authentication failed! Wrong email or password!')
   }
 }
