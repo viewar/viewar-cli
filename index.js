@@ -33,7 +33,7 @@ program
   .action(whoami)
 
 program
-  .command('list <user-email>')
+  .command('list [user-email]')
   .description('List available apps')
   .action(list)
 
