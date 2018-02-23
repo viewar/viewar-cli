@@ -1,58 +1,51 @@
 const crypto = require('crypto')
 const hash = crypto.createHash('md5')
-const prompt = require('prompt')
+const inquirer = require('inquirer')
+const request = require('request-promise')
 
-const {cliConfigPath} = require('../common/constants')
-const {getLoginUrl} = require('../common/urls')
+const exitWithError = require('../common/exit-with-error')
+const { updateJson } = require('../common/json')
+const { cliConfigPath } = require('../common/constants')
+const { getLoginUrl } = require('../common/urls')
 
-module.exports = ({request, updateJson}) => async () => {
+module.exports = async (userEmail) => {
+  const validateEmail = (value) => /.+@.+\..+/.test(value)
 
-  try {
-    const {username, password} = await (new Promise((resolve, reject) => {
-      prompt.start()
-      prompt.message = ''
-      prompt.delimiter = ':'
+  const {email = userEmail, password} = await inquirer.prompt([
+    {
+      type: 'input',
+      message: 'Enter email:',
+      name: 'email',
+      validate: validateEmail,
+      when: () => !validateEmail(userEmail)
+    },
+    {
+      type: 'password',
+      message: 'Enter password:',
+      name: 'password',
+    },
+  ])
 
-      prompt.get([{
-        name: 'username',
-        description: 'Username',
-        pattern: /.+@.+\..+/,
-        required: true,
-      }, {
-        name: 'password',
-        description: 'Password',
-        hidden: true,
-      }], function (error, result) {
-        if (!error) {
-          resolve(result)
-        } else {
-          reject(error)
-        }
-      })
-    }))
+  const passwordHash = hash.update(password).digest('hex')
 
-    const passwordHash = hash.update(password).digest('hex')
+  const response = await request.post(getLoginUrl(email, passwordHash)).then(JSON.parse)
 
-    const response = await request.post(getLoginUrl(username, passwordHash)).then(JSON.parse)
+  const {status, userId, fullname: userName, token} = response
 
-    const {status, message, userId, token} = response
+  if (status === 'ok') {
+    updateJson(cliConfigPath, (config) => {
+      config.users = config.users || {}
+      config.users[userId] = {
+        id: userId,
+        name: userName,
+        email: email,
+        token,
+      }
 
-    if (status === 'ok') {
-      updateJson(cliConfigPath, (config) => {
-        config.users = config.users || {}
-        config.users[userId] = {
-          id: userId,
-          name: username,
-          token,
-        }
-
-        return config
-      })
-      console.log(`User ${username} logged in.`)
-    } else {
-      throw new Error(message)
-    }
-  } catch (error) {
-
+      return config
+    })
+    console.log(`User ${userName} <${email}> logged in.`)
+  } else {
+    exitWithError('Authentication failed! Wrong email or password!')
   }
 }

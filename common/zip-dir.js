@@ -1,4 +1,7 @@
-module.exports = ({fs, archiver}) => (dirPath, zipPath) => {
+const fs = require('fs')
+const archiver = require('archiver')
+
+module.exports = (dirPath, zipPath) => {
   return new Promise((resolve, reject) => {
     const output = fs.createWriteStream(zipPath)
 

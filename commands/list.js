@@ -1,13 +1,16 @@
+const request = require('request-promise')
+
+const { readJson } = require('../common/json')
 const { getListAppsUrl } = require('../common/urls')
 const { cliConfigPath } = require('../common/constants')
 
-module.exports = ({request, readJson}) => async (username) => {
+module.exports = async (email) => {
   const data = readJson(cliConfigPath)
 
-  const entry = Object.values(data.users || {}).find((user) => user.name === username)
+  const entry = Object.values(data.users || {}).find((user) => user.email === email)
 
   if (!entry) {
-    return new Error(`User ${username} is not logged in!`)
+    return new Error(`User ${email} is not logged in!`)
   }
 
   const {id: userId, token} = entry

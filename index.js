@@ -4,31 +4,26 @@ const program = require('commander')
 const shell = require('shelljs')
 
 const currentVersion = require('./package.json').version
-const { deploy, init, initSample, list, login, logout, whoami } = require('./commands')
+const { deploy, init, list, login, logout, whoami } = require('./commands')
 
 if (!shell.test('-f', '~/.viewar-cli')) {
-  shell.exec('echo "{}" > ~/.viewar-cli')
+  shell.exec('echo "{\n  "users": {}\n}" > ~/.viewar-cli')
 }
 
 program.version(currentVersion)
 
 program
-  .command('init [project-name] [type]')
+  .command('init [user-email] [type]')
   .description('Prepares a new ViewAR project')
   .action(init)
 
 program
-  .command('init-sample <sample-name> [dir]')
-  .description('Prepares a new ViewAR sample')
-  .action(initSample)
-
-program
-  .command('login')
+  .command('login [user-email]')
   .description('Logs in user')
   .action(login)
 
 program
-  .command('logout <username>')
+  .command('logout <user-email>')
   .description('Logs out user')
   .action(logout)
 
@@ -38,7 +33,7 @@ program
   .action(whoami)
 
 program
-  .command('list <username>')
+  .command('list <user-email>')
   .description('List available apps')
   .action(list)
 

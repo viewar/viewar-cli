@@ -1,64 +1,178 @@
 const chalk = require('chalk')
 const path = require('path')
+const shell = require('shelljs')
+const inquirer = require('inquirer')
+const request = require('request-promise')
 
+const exitWithError = require('../common/exit-with-error')
 const generateToken = require('../common/generate-token')
+const { readJson, updateJson, writeJson } = require('../common/json')
+const { createAppUrl, getRepositoryUrl } = require('../common/urls')
+const { cliConfigPath: cliConfigFile, repositoryUrl } = require('../common/constants')
 
-const {repositoryUrl} = require('../common/constants')
+const projectTypes = {
+  'Vanilla Javascript': 'vanilla',
+  'React': 'react',
+  'Sample project': 'sample',
+}
 
-module.exports = ({shell, updateJson, writeJson}) => async (projectName = '.', type = 'vanilla') => {
-  const projectDir = path.resolve(process.cwd(), projectName)
+const sampleProjects = {
+  'Base6': 'base6',
+  'Other...': 'other',
+}
+
+module.exports = async (userEmail, projectType) => {
+
+  const projectDir = path.resolve(process.cwd())
   const packageInfoPath = path.resolve(projectDir, 'package.json')
   const cliConfigPath = path.resolve(projectDir, '.viewar-config')
 
-  if (shell.mkdir('-p', projectDir).code !== 0) {
-    if (!shell.test('-d', projectDir)) {
-      throw new Error(`${projectDir} exists and is not a directory!`)
+  const dirEmpty = shell.ls(projectDir).length === 0;
+
+  if (!dirEmpty) {
+    exitWithError('Directory not empty!')
+  }
+
+  const projectName = process.cwd().split(path.sep).pop()
+
+  const userList = Object.values(readJson(cliConfigFile).users || {})
+
+  if (userList.length === 0) {
+    exitWithError('There are no users logged in! Run viewar-api login first!')
+  }
+
+  const enteredUser = userEmail && userList.find(user => user.email === userEmail)
+
+  if (userEmail && !enteredUser) {
+    exitWithError(`User with email ${userEmail} is not logged in!  Run viewar-api whoami to see which user accounts are logged in!`)
+  }
+  
+  console.log(chalk`\nWelcome to ViewAR app initialization process!\n`);
+
+  const user = enteredUser ? enteredUser : (userList.length === 1 ? userList[0] : null);
+
+  if (user) {
+    if (enteredUser) {
+      console.log(`Logged in as: ${user.name} <${user.email}>`)
+    } else {
+      console.log(`Only one user account found, using this one: ${user.name} <${user.email}>`)
     }
   }
 
-  shell.cd(projectDir)
+  const answers = await inquirer.prompt([
+    {
+      name: 'token',
+      type: 'list',
+      message: 'Select the user account for this app:',
+      choices: userList.map(({name, email}) => `${name} <${email}>`),
+      filter: (choice) => userList.find(({name, email}) => `${name} <${email}>` === choice).token,
+      when: () => !user,
+    },
+    {
+      name: 'type',
+      type: 'list',
+      message: 'Select a project type:',
+      choices: Object.keys(projectTypes),
+      filter: (value) => projectTypes[value],
+      when: () => !projectType,
+    },
+    {
+      name: 'sample',
+      type: 'list',
+      message: 'Select a sample project',
+      choices: Object.keys(sampleProjects),
+      filter: (value) => sampleProjects[value],
+      when: ({type}) => projectType === projectTypes['Sample project'] || type === projectTypes['Sample project'],
+    },
+    {
+      name: 'sampleUrl',
+      type: 'input',
+      message: 'Repository URL',
+      when: ({sample}) => sample === sampleProjects['Other...'],
+    },
+    {
+      name: 'appId',
+      type: 'input',
+      message: 'Enter the app bundle ID:',
+      validate: (value) => /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value),
+    },
+    {
+      name: 'version',
+      type: 'input',
+      message: 'Enter the app version:',
+      default: '1.0',
+      //validate: (value) => /\d+(?:\.\d+(?:\.\d+)?)?/.test(value),
+      validate: (value) => /\d+(?:\.\d+)?/.test(value),
+    },
+    {
+      name: 'trackers',
+      type: 'checkbox',
+      message: 'Choose trackers',
+      choices: [
+        {
+          name: 'ARKit',
+        },
+        {
+          name: 'Vuforia',
+        },
+        {
+          name: 'Wikitude',
+        },
+      ],
+    },
+  ])
 
-  const dirEmpty = shell.ls(projectDir).length === 0;
+  const {token, type, appId, version, trackers, sample, sampleUrl} = Object.assign({
+    token: user && user.token,
+    type: projectType,
+  }, answers)
 
-  if (shell.ls(projectDir).length === 0) {
+  const formData = {
+    bundleIdentifier: appId,
+    version,
+    token,
+    tracker: trackers.join(','),
+  }
+
+  console.log(chalk`\nCreating app...`)
+
+  await request.post({uri: createAppUrl(), formData})
+
+  if (sampleUrl || sample) {
+    console.log(chalk`\nChecking out sample project...`)
+
+    shell.exec(`git clone -b master ${sampleUrl || getRepositoryUrl(sample)} .`, {silent: true})
+  } else {
     console.log(chalk`\nDownloading boilerplate project...`)
 
     shell.exec(`git clone -b master ${repositoryUrl} temp`, {silent: true})
     shell.mv(`./temp/${type}/*`, `.`)
     shell.rm('-rf', 'temp')
-
-    console.log(chalk`\nInstalling dependencies...`)
-
-    if (shell.exec('npm install', {silent: true}).code !== 0) {
-      throw new Error(`Failed installing npm dependencies! Check if npm is installed and up-to-date.`)
-    }
-
-    console.log(chalk`\nInitializing git repository...`)
-
-    if (shell.exec('git init', {silent: true}).code !== 0) {
-      throw new Error(`Git repository initialization failed! Check if git is installed.`)
-    }
-
-    updateJson(packageInfoPath, (object) => Object.assign(object, {
-      name: projectName,
-      description: '',
-    }))
-  } else {
-    console.log(chalk`\nExisting files detected in directory ${projectDir}, writing .viewar-config`)
   }
 
-  if (shell.test('-f', '.viewar-config')) {
-    shell.mv('.viewar-config', `.viewar-config.old.${generateToken()}`)
+  console.log(chalk`\nInstalling dependencies...`)
+
+  if (shell.exec('npm install', {silent: true}).code !== 0) {
+    exitWithError(`Failed installing npm dependencies! Check if npm is installed and up-to-date.`)
   }
+
+  console.log(chalk`\nInitializing git repository...`)
+
+  if (shell.exec('git init', {silent: true}).code !== 0) {
+    exitWithError(`Git repository initialization failed! Check if git is installed.`)
+  }
+
+  updateJson(packageInfoPath, (object) => Object.assign(object, {
+    name: projectName,
+    description: '',
+  }))
 
   writeJson(cliConfigPath, {
     id: generateToken(),
     token: generateToken(),
+    appId,
+    version,
   })
 
-  if (dirEmpty) {
-    console.log(chalk`\n{bold Done!}\n  Enter the new project directory by running {green cd ${projectName}}\n  Run {green npm start} to start the development server (defaults to {green localhost:8080 })\n  Open {green /src/index.js} to begin editing your app.`)
-  } else {
-    console.log(chalk`\n{bold Done!}`)
-  }
+  console.log(chalk`\n{bold Done!}\n  Run {green npm start} to start the development server (defaults to {green localhost:8080 })\n  Open {green /src/index.js} to begin editing your app.`)
 }
