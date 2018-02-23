@@ -7,7 +7,7 @@ const request = require('request-promise')
 const exitWithError = require('../common/exit-with-error')
 const generateToken = require('../common/generate-token')
 const { readJson, updateJson, writeJson } = require('../common/json')
-const { createAppUrl } = require('../common/urls')
+const { createAppUrl, getRepositoryUrl } = require('../common/urls')
 const { cliConfigPath: cliConfigFile, repositoryUrl } = require('../common/constants')
 
 module.exports = async (username, projectType, projectName) => {
@@ -56,9 +56,39 @@ module.exports = async (username, projectType, projectName) => {
         {
           name: 'React',
         },
+        {
+          name: 'Sample project',
+        },
       ],
       filter: (value) => value.toLowerCase(),
       when: () => !projectType,
+    },
+    {
+      name: 'sample',
+      type: 'list',
+      message: 'Sample project',
+      choices: [
+        {
+          name: 'Base6',
+        },
+        {
+          name: 'Furniture',
+        },
+        {
+          name: 'Architecture',
+        },
+        {
+          name: 'Other...',
+        },
+      ],
+      filter: (value) => value.toLowerCase(),
+      when: ({type}) => projectType === 'sample' || type === 'Sample project',
+    },
+    {
+      name: 'sampleUrl',
+      type: 'input',
+      message: 'Repository URL',
+      when: ({sample}) => sample === 'Other...',
     },
     {
       name: 'name',
@@ -99,7 +129,7 @@ module.exports = async (username, projectType, projectName) => {
     },
   ])
 
-  const {token, name, type, appId, version, trackers} = Object.assign({
+  const {token, name, type, appId, version, trackers, sample, sampleUrl} = Object.assign({
     token: userToken,
     type: projectType,
     name: projectName,
@@ -116,11 +146,17 @@ module.exports = async (username, projectType, projectName) => {
 
   await request.post({uri: createAppUrl(), formData})
 
-  console.log(chalk`\nDownloading boilerplate project...`)
+  if (sampleUrl || sample) {
+    console.log(chalk`\nChecking out sample project...`)
 
-  shell.exec(`git clone -b master ${repositoryUrl} temp`, {silent: true})
-  shell.mv(`./temp/${type}/*`, `.`)
-  shell.rm('-rf', 'temp')
+    shell.exec(`git clone -b master ${sampleUrl || getRepositoryUrl(sample)} .`, {silent: true})
+  } else {
+    console.log(chalk`\nDownloading boilerplate project...`)
+
+    shell.exec(`git clone -b master ${repositoryUrl} temp`, {silent: true})
+    shell.mv(`./temp/${type}/*`, `.`)
+    shell.rm('-rf', 'temp')
+  }
 
   console.log(chalk`\nInstalling dependencies...`)
 
