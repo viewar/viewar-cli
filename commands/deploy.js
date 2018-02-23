@@ -4,12 +4,13 @@ const fs = require('fs')
 const shell = require('shelljs')
 const request = require('request-promise')
 
+const exitWithError = require('../common/exit-with-error')
 const zipDirectory = require('../common/zip-dir')
 const { readJson, writeJson } = require('../common/json')
 const { getAppConfigUrl, getActivateUrl, getUploadBundleUrl } = require('../common/urls')
 const { cliConfigPath } = require('../common/constants')
 
-module.exports = async (appId, version, tags) => {
+module.exports = async (...args) => {
   const appRoot = process.cwd()
   const buildDir = path.resolve(appRoot, 'build') + '/'
   const bundlePath = path.resolve(appRoot, 'bundle.zip')
@@ -18,7 +19,22 @@ module.exports = async (appId, version, tags) => {
   const apiPackageInfoPath = path.resolve(appRoot, 'node_modules', 'viewar-api', 'package.json')
   const bundleInfoPath = path.resolve(buildDir, 'bundle-info.json')
 
-  console.log(chalk`Bundling app...`)
+  const appInfo = readJson(appInfoPath)
+  const {id, token} = appInfo
+
+  let appId
+  let version
+  let tags
+
+  if (args.length < 2) {
+    appId = appInfo.appId
+    version = appInfo.version
+    tags = args[0] || ''
+  } else {
+    [appId, version, tags = ''] = args
+  }
+
+  console.log(chalk`\nBundling app...`)
 
   shell.exec('npm run build', {silent: true})
 
@@ -39,10 +55,9 @@ module.exports = async (appId, version, tags) => {
 
   await zipDirectory(buildDir, bundlePath)
 
-  const {id, token} = readJson(appInfoPath)
   const timestamp = new Date().toISOString().replace(/\..*$/, '').replace(/[-T:]/g, '')
 
-  console.log(chalk`Uploading app bundle...`)
+  console.log(chalk`\nUploading app bundle...`)
 
   const formData = {
     id,
@@ -56,12 +71,12 @@ module.exports = async (appId, version, tags) => {
   shell.rm('-rf', bundlePath)
   shell.rm('-rf', buildDir)
 
-  console.log(chalk`Activating bundle...`)
+  console.log(chalk`\nActivating bundle...`)
 
   const info = await request.post(getAppConfigUrl(appId, version)).then(JSON.parse)
 
   if (!info) {
-    throw new Error('Wrong bundle ID or version!')
+    exitWithError('Wrong bundle ID or version!')
   }
 
   const ownerId = info.config.channel
@@ -71,7 +86,7 @@ module.exports = async (appId, version, tags) => {
   const user = (data.users || {})[ownerId]
 
   if (!user) {
-    throw new Error(`App owner is not logged in!`)
+    exitWithError(`App owner is not logged in!`)
   }
 
   const response = await request.post(getActivateUrl(user.token, appId, version, `${id}-${timestamp}`)).then(JSON.parse)
@@ -81,6 +96,6 @@ module.exports = async (appId, version, tags) => {
   if (status === 'ok') {
     console.log(chalk`Done!`)
   } else {
-    throw new Error(message)
+    exitWithError(message)
   }
 }

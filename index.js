@@ -4,7 +4,7 @@ const program = require('commander')
 const shell = require('shelljs')
 
 const currentVersion = require('./package.json').version
-const { deploy, init, list, login, logout, whoami } = require('./commands')
+const { deploy, init, list, login, logout, set, whoami } = require('./commands')
 
 if (!shell.test('-f', '~/.viewar-cli')) {
   shell.exec('echo "{\n  "users": {}\n}" > ~/.viewar-cli')
@@ -16,6 +16,11 @@ program
   .command('init [user-email] [type]')
   .description('Prepares a new ViewAR project')
   .action(init)
+
+program
+  .command('set <app-id> <version>')
+  .description('Sets app bundle ID and version')
+  .action(set)
 
 program
   .command('login [user-email]')
@@ -33,12 +38,12 @@ program
   .action(whoami)
 
 program
-  .command('list <user-email>')
+  .command('list [user-email]')
   .description('List available apps')
   .action(list)
 
 program
-  .command('deploy <app-id> <version> [tags]')
+  .command('deploy [app-id] [version] [tags]')
   .description('Deploys the project')
   .action(deploy)
 

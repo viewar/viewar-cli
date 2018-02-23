@@ -9,6 +9,7 @@ const generateToken = require('../common/generate-token')
 const { readJson, updateJson, writeJson } = require('../common/json')
 const { createAppUrl, getRepositoryUrl } = require('../common/urls')
 const { cliConfigPath: cliConfigFile, repositoryUrl } = require('../common/constants')
+const deploy = require('../commands/deploy')
 
 const projectTypes = {
   'Vanilla Javascript': 'vanilla',
@@ -18,6 +19,8 @@ const projectTypes = {
 
 const sampleProjects = {
   'Base6': 'base6',
+  'QR Navigation': 'qrnavigation',
+  'Vanilla sample': 'vanilla',
   'Other...': 'other',
 }
 
@@ -174,5 +177,7 @@ module.exports = async (userEmail, projectType) => {
     version,
   })
 
-  console.log(chalk`\n{bold Done!}\n  Run {green npm start} to start the development server (defaults to {green localhost:8080 })\n  Open {green /src/index.js} to begin editing your app.`)
+  await deploy(appId, version, 'initial')
+
+  console.log(chalk`\n  Run {green npm start} to start the development server (defaults to {green localhost:8080 })\n  Open {green /src/index.js} to begin editing your app.`)
 }
