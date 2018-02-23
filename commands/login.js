@@ -14,14 +14,14 @@ module.exports = async (userEmail) => {
   const {email = userEmail, password} = await inquirer.prompt([
     {
       type: 'input',
-      message: 'Username',
+      message: 'Enter email:',
       name: 'email',
       validate: validateEmail,
       when: () => !validateEmail(userEmail)
     },
     {
       type: 'password',
-      message: 'Password',
+      message: 'Enter password:',
       name: 'password',
     },
   ])
