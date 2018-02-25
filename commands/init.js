@@ -41,7 +41,7 @@ module.exports = async (userEmail, projectType) => {
   const userList = Object.values(readJson(cliConfigFile).users || {})
 
   if (userList.length === 0) {
-    exitWithError('There are no users logged in! Run viewar-api login first!')
+    exitWithError('There are no users logged in! Run "viewar-cli login" first!')
   }
 
   const enteredUser = userEmail && userList.find(user => user.email === userEmail)
