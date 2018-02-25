@@ -5,9 +5,11 @@ const shell = require('shelljs')
 
 const currentVersion = require('./package.json').version
 const { deploy, init, list, login, logout, set, whoami } = require('./commands')
+const { writeJson } = require('./common/json')
+const { cliConfigPath, defaultCliConfig } = require('./common/constants')
 
-if (!shell.test('-f', '~/.viewar-cli')) {
-  shell.exec('echo "{\n  "users": {}\n}" > ~/.viewar-cli')
+if (!shell.test('-f', cliConfigPath)) {
+  writeJson(cliConfigPath, defaultCliConfig)
 }
 
 program.version(currentVersion)

@@ -1,5 +1,7 @@
+const chalk = require('chalk')
+
 module.exports = (message, errorCode = 1) => {
-  console.error(message)
+  console.error(chalk`{red ERROR: ${message}}`)
   process.exit(errorCode)
 }
 

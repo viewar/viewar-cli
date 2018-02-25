@@ -41,7 +41,7 @@ module.exports = async (userEmail, projectType) => {
   const userList = Object.values(readJson(cliConfigFile).users || {})
 
   if (userList.length === 0) {
-    exitWithError('There are no users logged in! Run viewar-api login first!')
+    exitWithError('There are no users logged in! Run "viewar-cli login" first!')
   }
 
   const enteredUser = userEmail && userList.find(user => user.email === userEmail)
@@ -179,5 +179,10 @@ module.exports = async (userEmail, projectType) => {
 
   await deploy(appId, version, 'initial')
 
-  console.log(chalk`\n  Run {green npm start} to start the development server (defaults to {green localhost:8080 })\n  Open {green /src/index.js} to begin editing your app.`)
+  console.log(chalk`\n  App bundle ID: {yellow ${appId}} Version: {yellow ${version}}`)
+  console.log(chalk`\n  Use the {yellow ViewAR SDK app} from Appstore/Playstore to test your app on a device.`)
+  console.log(chalk`\n  Visit {yellow https://webversion.viewar.com/${appId}/${version}/} to run your app in the browser.`)
+  console.log(chalk`\n  Run {yellow npm run start} to start the local development server with WebGL support.`)
+  console.log(chalk`\n  Run {yellow npm run start:mock} to start the local development server without WebGL support (mock mode).`)
+  
 }
