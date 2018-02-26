@@ -10,7 +10,7 @@ const { readJson, writeJson } = require('../common/json')
 const { getAppConfigUrl, getActivateUrl, getUploadBundleUrl } = require('../common/urls')
 const { cliConfigPath } = require('../common/constants')
 
-module.exports = async (...args) => {
+module.exports = async (appId, version, tags = '') => {
   const appRoot = process.cwd()
   const buildDir = path.resolve(appRoot, 'build') + '/'
   const bundlePath = path.resolve(appRoot, 'bundle.zip')
@@ -22,16 +22,9 @@ module.exports = async (...args) => {
   const appInfo = readJson(appInfoPath)
   const {id, token} = appInfo
 
-  let appId
-  let version
-  let tags
-
-  if (args.length < 2) {
+  if (!appId && !version) {
     appId = appInfo.appId
     version = appInfo.version
-    tags = args[0] || ''
-  } else {
-    [appId, version, tags = ''] = args
   }
 
   console.log(chalk`\nBundling app...`)
@@ -94,7 +87,7 @@ module.exports = async (...args) => {
   const {status, message} = response
 
   if (status === 'ok') {
-    console.log(chalk`Done!`)
+    console.log(chalk`\nDone!`)
   } else {
     exitWithError(message)
   }
