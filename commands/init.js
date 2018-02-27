@@ -1,4 +1,5 @@
 const chalk = require('chalk')
+const fs = require('fs')
 const path = require('path')
 const shell = require('shelljs')
 const inquirer = require('inquirer')
@@ -8,21 +9,8 @@ const exitWithError = require('../common/exit-with-error')
 const generateToken = require('../common/generate-token')
 const { readJson, updateJson, writeJson } = require('../common/json')
 const { createAppUrl, getRepositoryUrl } = require('../common/urls')
-const { cliConfigPath: cliConfigFile, repositoryUrl } = require('../common/constants')
+const { cliConfigPath: cliConfigFile, repositoryUrl, projectTypes, sampleProjects } = require('../common/constants')
 const deploy = require('../commands/deploy')
-
-const projectTypes = {
-  'Vanilla Javascript': 'vanilla',
-  'React': 'react',
-  'Sample project': 'sample',
-}
-
-const sampleProjects = {
-  'Base6': 'base6',
-  'QR Navigation': 'qrnavigation',
-  'Vanilla sample': 'vanilla',
-  'Other...': 'other',
-}
 
 module.exports = async (userEmail, projectType) => {
 
@@ -100,7 +88,7 @@ module.exports = async (userEmail, projectType) => {
       validate: (value) => /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value),
     },
     {
-      name: 'version',
+      name: 'appVersion',
       type: 'input',
       message: 'Enter the app version:',
       default: '1.0',
@@ -125,14 +113,14 @@ module.exports = async (userEmail, projectType) => {
     },
   ])
 
-  const {token, type, appId, version, trackers, sample, sampleUrl} = Object.assign({
+  const {token, type, appId, appVersion, trackers, sample, sampleUrl} = Object.assign({
     token: user && user.token,
     type: projectType,
   }, answers)
 
   const formData = {
     bundleIdentifier: appId,
-    version,
+    version: appVersion,
     token,
     tracker: trackers.join(','),
   }
@@ -174,14 +162,16 @@ module.exports = async (userEmail, projectType) => {
     id: generateToken(),
     token: generateToken(),
     appId,
-    version,
+    appVersion,
   })
 
-  await deploy(appId, version, 'initial')
+  fs.writeFileSync('.gitignore', ['.viewar-config', 'node_modules/', 'build/'].join('\n'), 'utf8')
 
-  console.log(chalk`\n  App bundle ID: {yellow ${appId}} Version: {yellow ${version}}`)
+  await deploy(appId, appVersion, 'initial')
+
+  console.log(chalk`\n  App bundle ID: {yellow ${appId}} Version: {yellow ${appVersion}}`)
   console.log(chalk`\n  Use the {yellow ViewAR SDK app} from Appstore/Playstore to test your app on a device.`)
-  console.log(chalk`\n  Visit {yellow https://webversion.viewar.com/${appId}/${version}/} to run your app in the browser.`)
+  console.log(chalk`\n  Visit {yellow https://webversion.viewar.com/${appId}/${appVersion}/} to run your app in the browser.`)
   console.log(chalk`\n  Run {yellow npm run start} to start the local development server with WebGL support.`)
   console.log(chalk`\n  Run {yellow npm run start:mock} to start the local development server without WebGL support (mock mode).`)
   

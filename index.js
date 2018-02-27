@@ -4,7 +4,7 @@ const program = require('commander')
 const shell = require('shelljs')
 
 const currentVersion = require('./package.json').version
-const { deploy, init, list, login, logout, set, whoami } = require('./commands')
+const { deploy, init, list, login, logout, generate, set, whoami } = require('./commands')
 const { writeJson } = require('./common/json')
 const { cliConfigPath, defaultCliConfig } = require('./common/constants')
 
@@ -20,7 +20,13 @@ program
   .action(init)
 
 program
-  .command('set <app-id> <version>')
+  .command('generate')
+  .alias('generate-token')
+  .description('Generates new upload token')
+  .action(generate)
+
+program
+  .command('set <app-id> <app-version>')
   .description('Sets app bundle ID and version')
   .action(set)
 
@@ -45,7 +51,7 @@ program
   .action(list)
 
 program
-  .command('deploy [app-id] [version] [tags]')
+  .command('deploy [app-id] [app-version] [tags]')
   .description('Deploys the project')
   .action(deploy)
 
