@@ -10,7 +10,7 @@ const { readJson, writeJson } = require('../common/json')
 const { getAppConfigUrl, getActivateUrl, getUploadBundleUrl } = require('../common/urls')
 const { cliConfigPath } = require('../common/constants')
 
-module.exports = async (appId, version, tags = '') => {
+module.exports = async (appId, appVersion, tags = '') => {
   const appRoot = process.cwd()
   const buildDir = path.resolve(appRoot, 'build') + '/'
   const bundlePath = path.resolve(appRoot, 'bundle.zip')
@@ -22,9 +22,9 @@ module.exports = async (appId, version, tags = '') => {
   const appInfo = readJson(appInfoPath)
   const {id, token} = appInfo
 
-  if (!appId && !version) {
+  if (!appId && !appVersion) {
     appId = appInfo.appId
-    version = appInfo.version
+    appVersion = appInfo.appVersion || appInfo.version
   }
 
   console.log(chalk`\nBundling app...`)
@@ -66,7 +66,7 @@ module.exports = async (appId, version, tags = '') => {
 
   console.log(chalk`\nActivating bundle...`)
 
-  const info = await request.post(getAppConfigUrl(appId, version)).then(JSON.parse)
+  const info = await request.post(getAppConfigUrl(appId, appVersion)).then(JSON.parse)
 
   if (!info) {
     exitWithError('Wrong bundle ID or version!')
@@ -76,13 +76,13 @@ module.exports = async (appId, version, tags = '') => {
 
   const data = readJson(cliConfigPath)
 
-  const user = (data.users || {})[ownerId]
+  const user = data.users[ownerId]
 
   if (!user) {
     exitWithError(`App owner is not logged in!`)
   }
 
-  const response = await request.post(getActivateUrl(user.token, appId, version, `${id}-${timestamp}`)).then(JSON.parse)
+  const response = await request.post(getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`)).then(JSON.parse)
 
   const {status, message} = response
 
