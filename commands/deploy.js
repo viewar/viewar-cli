@@ -19,7 +19,7 @@ module.exports = async (appId, appVersion, tags = '') => {
   const apiPackageInfoPath = path.resolve(appRoot, 'node_modules', 'viewar-api', 'package.json')
   const bundleInfoPath = path.resolve(buildDir, 'bundle-info.json')
 
-  const appInfo = readJson(appInfoPath)
+  const appInfo = readJson(appInfoPath, '\'.viewar-config\' file not found! Working directory does not contain a ViewAR SDK app!')
   const {id, token} = appInfo
 
   if (!appId && !appVersion) {
@@ -31,8 +31,8 @@ module.exports = async (appId, appVersion, tags = '') => {
 
   shell.exec('npm run build', {silent: true})
 
-  const corePackageInfo = readJson(corePackageInfoPath)
-  const apiPackageInfo = readJson(apiPackageInfoPath)
+  const corePackageInfo = readJson(corePackageInfoPath, '\'viewar-core\' npm dependency not found! Run \'npm install\' to install it.')
+  const apiPackageInfo = readJson(apiPackageInfoPath, '\'viewar-api\' npm dependency not found! Run \'npm install\' to install it.')
   const [commit, author, subject] = shell.exec('git log --format=\'%H||%an <%ae>||%s\' HEAD^! | cat', {silent: true}).stdout.trim().split('||')
 
   writeJson(bundleInfoPath, {
