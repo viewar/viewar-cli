@@ -55,8 +55,9 @@ program
   .description('Deploys the project')
   .action(deploy)
 
-if (process.argv.length < 3) {
-  program.outputHelp()
-} else {
-  program.parse(process.argv)
+program.parse(process.argv)
+
+if (!program.commands.map(cmd => cmd._name).includes(program.args[0])) {
+  console.log(`viewar-cli: '${program.args[0]}' is not a viewar-cli command.`)
+  program.help()
 }
