@@ -109,6 +109,9 @@ module.exports = async (userEmail, projectType) => {
         {
           name: 'Wikitude',
         },
+        {
+          name: 'visionLib',
+        },
       ],
     },
   ])
