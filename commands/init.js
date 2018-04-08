@@ -27,6 +27,7 @@ module.exports = async (userEmail, projectType) => {
   const projectName = process.cwd().split(path.sep).pop()
 
   const userList = Object.values(readJson(cliConfigFile).users || {})
+  const overrides = readJson(cliConfigFile).overrides
 
   if (userList.length === 0) {
     exitWithError('There are no users logged in! Run "viewar-cli login" first!')
@@ -135,13 +136,26 @@ module.exports = async (userEmail, projectType) => {
   if (sampleUrl || sample) {
     console.log(chalk`\nChecking out sample project...`)
 
-    shell.exec(`git clone -b master ${sampleUrl || getRepositoryUrl(sample)} .`, {silent: true})
+    const override = overrides['sample/' + (sampleUrl || sample)]
+
+    if (override) {
+      shell.cp('-rf', `${override}/*`, '.')
+    } else {
+      shell.exec(`git clone -b master ${sampleUrl || getRepositoryUrl(sample)} .`, {silent: true})
+    }
+
   } else {
     console.log(chalk`\nDownloading boilerplate project...`)
 
-    shell.exec(`git clone -b master ${repositoryUrl} temp`, {silent: true})
-    shell.mv(`./temp/${type}/*`, `.`)
-    shell.rm('-rf', 'temp')
+    const override = overrides['boilerplate/' + type]
+
+    if (override) {
+      shell.cp('-rf', `${override}/*`, '.')
+    } else {
+      shell.exec(`git clone -b master ${repositoryUrl} temp`, {silent: true})
+      shell.mv(`./temp/${type}/*`, `.`)
+      shell.rm('-rf', 'temp')
+    }
   }
 
   console.log(chalk`\nInstalling dependencies...`)
@@ -173,9 +187,8 @@ module.exports = async (userEmail, projectType) => {
   await deploy(appId, appVersion, 'initial')
 
   console.log(chalk`\n  App bundle ID: {yellow ${appId}} Version: {yellow ${appVersion}}`)
-  console.log(chalk`\n  Use the {yellow ViewAR SDK app} from Appstore/Playstore to test your app on a device.`)
+  console.log(chalk`\n  Use the {yellow ViewAR SDK app} from App Store/Play Store to test your app on a device.`)
   console.log(chalk`\n  Visit {yellow https://webversion.viewar.com/${appId}/${appVersion}/} to run your app in the browser.`)
   console.log(chalk`\n  Run {yellow npm run start} to start the local development server with WebGL support.`)
   console.log(chalk`\n  Run {yellow npm run start:mock} to start the local development server without WebGL support (mock mode).`)
-  
 }
