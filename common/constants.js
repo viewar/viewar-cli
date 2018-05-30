@@ -3,6 +3,7 @@ const os = require('os')
 const cliConfigPath = `${os.homedir()}/.viewar-cli`
 const defaultCliConfig = {
   users: {},
+  overrides: {},
 }
 const repositoryUrl = 'https://github.com/viewar/viewar-boilerplate.git'
 

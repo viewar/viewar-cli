@@ -26,8 +26,9 @@ module.exports = async (userEmail, projectType) => {
 
   const projectName = process.cwd().split(path.sep).pop()
 
-  const userList = Object.values(readJson(cliConfigFile).users || {})
-  const overrides = readJson(cliConfigFile).overrides
+  const { users = {}, overrides = {} } = readJson(cliConfigFile)
+
+  const userList = Object.values(users)
 
   if (userList.length === 0) {
     exitWithError('There are no users logged in! Run "viewar-cli login" first!')
