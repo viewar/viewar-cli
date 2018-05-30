@@ -16,6 +16,7 @@ const sampleProjects = {
   'Base6': 'base6',
   'QR Navigation': 'qrnavigation',
   'Vanilla sample': 'vanilla',
+  'LinkSys': 'linksys',
   'Other...': 'other',
 }
 
