@@ -85,7 +85,7 @@ module.exports = async (userEmail, projectType) => {
     {
       name: 'appId',
       type: 'input',
-      message: 'Enter the app bundle ID:',
+      message: 'Enter the app ID:',
       validate: (value) => /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value),
     },
     {
@@ -109,6 +109,9 @@ module.exports = async (userEmail, projectType) => {
         },
         {
           name: 'Wikitude',
+        },
+        {
+          name: 'VisionLib',
         },
       ],
     },
