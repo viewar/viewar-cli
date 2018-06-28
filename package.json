@@ -23,13 +23,14 @@
     "viewar-cli": "index.js"
   },
   "dependencies": {
+    "ajv": "^6.5.0",
     "archiver": "^2.1.1",
     "chalk": "^2.3.0",
     "commander": "^2.13.0",
     "easy-table": "^1.1.1",
     "inquirer": "^5.1.0",
     "prompt": "^1.0.0",
-    "request": "^2.83.0",
+    "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "semver": "^5.5.0",
     "shelljs": "^0.8.1"
