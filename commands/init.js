@@ -106,6 +106,9 @@ module.exports = async (userEmail, projectType) => {
           name: 'ARKit',
         },
         {
+          name: 'ARCore',
+        },
+        {
           name: 'Vuforia',
         },
         {
