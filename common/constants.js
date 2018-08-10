@@ -17,7 +17,7 @@ const sampleProjects = {
   'Base6': 'base6',
   'QR Navigation': 'qrnavigation',
   'Vanilla sample': 'vanilla',
-  'LinkSys': 'linksys',
+  'Helpar Object Tracking': 'helpar-objecttracking',
   'Other...': 'other',
 }
 
