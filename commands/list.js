@@ -9,7 +9,7 @@ const { cliConfigPath } = require('../common/constants')
 module.exports = async (email) => {
   const data = readJson(cliConfigPath)
 
-  const users = Object.values(data.users || {}).filter((user) => !email || user.email.includes(email))
+  const users = Object.values(data.users || {}).filter((user) => !email || (user.email && user.email.includes(email)))
 
   if (!users.length) {
     exitWithError(`User ${email} is not logged in!`)
@@ -24,7 +24,7 @@ module.exports = async (email) => {
     if (status === 'ok') {
       const table = new Table()
 
-      apps.forEach(({bundleIdentifier, version}) => {
+      apps && apps.forEach(({bundleIdentifier, version}) => {
         table.cell('App bundle ID', bundleIdentifier)
         table.cell('Version', version)
         table.newRow()

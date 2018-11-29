@@ -4,8 +4,7 @@
   "description": "ViewAR SDK Command Line Interface",
   "main": "index.js",
   "contributors": [
-    "Ivan Šakić <is@viewar.com>",
-    "Matthias Klan <mk@viewar.com>"
+    "Karl Hofer <kh@viewar.com>"
   ],
   "repository": {
     "type": "git",
@@ -20,7 +19,8 @@
     "node": ">=8"
   },
   "bin": {
-    "viewar-cli": "index.js"
+    "viewar-cli": "index.js",
+    "viewar": "index.js"
   },
   "dependencies": {
     "ajv": "^6.5.0",
@@ -29,10 +29,11 @@
     "commander": "^2.13.0",
     "easy-table": "^1.1.1",
     "inquirer": "^5.1.0",
+    "latest-version": "^4.0.0",
     "prompt": "^1.0.0",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
-    "semver": "^5.5.0",
+    "semver": "^5.6.0",
     "shelljs": "^0.8.1"
   },
   "devDependencies": {
