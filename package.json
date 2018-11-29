@@ -12,8 +12,21 @@
   },
   "license": "MIT",
   "scripts": {
+    "build": "npm link",
     "version": "git add -A",
-    "postversion": "git push origin HEAD && git push --tags"
+    "postversion": "git push origin HEAD && git push --tags",
+    "format": "prettier --single-quote --trailing-comma es5 '**/*.{js,md,json}' --write"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,scss,md,jsx}": [
+      "prettier --single-quote --trailing-comma es5 --write",
+      "git add"
+    ]
   },
   "engines": {
     "node": ">=8"
@@ -37,6 +50,8 @@
     "shelljs": "^0.8.1"
   },
   "devDependencies": {
-    "tape": "^4.8.0"
+    "husky": "^1.2.0",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.2"
   }
 }

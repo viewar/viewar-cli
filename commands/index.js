@@ -7,4 +7,4 @@ module.exports = {
   generate: require('./generate'),
   set: require('./set'),
   whoami: require('./whoami'),
-}
+};
