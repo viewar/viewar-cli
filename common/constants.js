@@ -18,6 +18,7 @@ const sampleProjects = {
   'QR Navigation': 'qrnavigation',
   'Vanilla sample': 'vanilla',
   'Helpar Object Tracking': 'helpar-objecttracking',
+  'Helpar Remote Assistance': 'helpar-remote-assistance',
   'Other...': 'other',
 };
 

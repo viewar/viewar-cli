@@ -149,6 +149,12 @@ module.exports = async (directory, projectType, userEmail) => {
         {
           name: 'visionLib',
         },
+        {
+          name: 'Placenote',
+        },
+        {
+          name: 'Remote',
+        },
       ],
     },
   ]);
