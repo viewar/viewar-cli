@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+## [0.7.0]
+
+### Added
+
+- Show advanced error message when build directory does not exist while deploying.
+
+## [0.6.0]
+
+### Added
+
+- Placenote tracker
+- Remote tracker
+- Helpar sample
+
 ## [0.5.0]
 
 ### Added

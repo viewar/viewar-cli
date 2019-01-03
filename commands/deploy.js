@@ -47,6 +47,11 @@ module.exports = async (appId, appVersion, tags = '') => {
   console.log(chalk`\nBundling app...`);
 
   shell.exec('npm run build', { silent: true });
+  if (!fs.existsSync('build')) {
+    exitWithError(
+      'No build directory existing. Please run yarn build or npm run build manually to check the error message.'
+    );
+  }
 
   const corePackageInfo = readJson(
     corePackageInfoPath,
