@@ -2,9 +2,12 @@
 
 ## [Unreleased]
 
+## [0.8.0]
+
 ### Added
 
 - Check for correct node version.
+- Read and use tracking config from template repository.
 
 ## [0.7.0]
 

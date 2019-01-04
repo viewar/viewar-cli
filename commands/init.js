@@ -5,6 +5,7 @@ const shell = require('shelljs');
 const inquirer = require('inquirer');
 const request = require('request-promise');
 
+const getTemplateConfig = require('../common/get-template-config');
 const exitWithError = require('../common/exit-with-error');
 const generateToken = require('../common/generate-token');
 const { readJson, updateJson, writeJson } = require('../common/json');
@@ -80,6 +81,7 @@ module.exports = async (directory, projectType, userEmail) => {
     }
   }
 
+  // Get new app info.
   const answers = await inquirer.prompt([
     {
       name: 'token',
@@ -129,45 +131,9 @@ module.exports = async (directory, projectType, userEmail) => {
       //validate: (value) => /\d+(?:\.\d+(?:\.\d+)?)?/.test(value),
       validate: value => /\d+(?:\.\d+)?/.test(value),
     },
-    {
-      name: 'trackers',
-      type: 'checkbox',
-      message: 'Choose trackers',
-      choices: [
-        {
-          name: 'ARKit',
-        },
-        {
-          name: 'ARCore',
-        },
-        {
-          name: 'Vuforia',
-        },
-        {
-          name: 'Wikitude',
-        },
-        {
-          name: 'visionLib',
-        },
-        {
-          name: 'Placenote',
-        },
-        {
-          name: 'Remote',
-        },
-      ],
-    },
   ]);
 
-  const {
-    token,
-    type,
-    appId,
-    appVersion,
-    trackers,
-    sample,
-    sampleUrl,
-  } = Object.assign(
+  const { token, type, appId, appVersion, sample, sampleUrl } = Object.assign(
     {
       token: user && user.token,
       type: projectType,
@@ -175,12 +141,75 @@ module.exports = async (directory, projectType, userEmail) => {
     answers
   );
 
+  // Get template config.
+  let templateConfig = await getTemplateConfig(sample);
+
+  // Get tracking config (if existing in template config) or tracker.
+  let trackingAnswer;
+  if (templateConfig.tracking) {
+    if (Object.keys(templateConfig.tracking).length === 1) {
+      // Automatically select tracker if only one given in template config.
+      trackingAnswer = {
+        trackingConfig: Object.keys(templateConfig.tracking)[0],
+      };
+    } else {
+      trackingAnswer = await inquirer.prompt([
+        {
+          name: 'trackingConfig',
+          type: 'list',
+          message: 'Choose tracking config:',
+          choices: Object.keys(templateConfig.tracking),
+        },
+      ]);
+    }
+  } else {
+    trackingAnswer = await inquirer.prompt([
+      {
+        name: 'trackers',
+        type: 'checkbox',
+        message: 'Choose trackers:',
+        choices: [
+          {
+            name: 'ARKit',
+          },
+          {
+            name: 'ARCore',
+          },
+          {
+            name: 'Vuforia',
+          },
+          {
+            name: 'Wikitude',
+          },
+          {
+            name: 'visionLib',
+          },
+          {
+            name: 'Placenote',
+          },
+          {
+            name: 'Remote',
+          },
+        ],
+      },
+    ]);
+  }
+
+  const { trackers = [], trackingConfig = null } = trackingAnswer;
+
   const formData = {
     bundleIdentifier: appId,
     version: appVersion,
     token,
     tracker: trackers.join(','),
   };
+
+  if (trackingConfig) {
+    // This will override tracker if existing.
+    formData.trackingConfig = JSON.stringify(
+      templateConfig.tracking[trackingConfig]
+    );
+  }
 
   console.log(chalk`\nCreating app...`);
 

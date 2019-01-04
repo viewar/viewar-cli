@@ -12,6 +12,9 @@ const createAppUrl = () => `https://dev2.viewar.com/api40/createApp`;
 const getRepositoryUrl = templateName =>
   `https://github.com/viewar/viewar-template-${templateName}.git`;
 
+const getCliConfigUrl = (templateName, branch = 'master') =>
+  `https://raw.githubusercontent.com/viewar/viewar-template-${templateName}/${branch}/.viewar-template-config.json`;
+
 module.exports = {
   createAppUrl,
   getActivateUrl,
@@ -19,5 +22,6 @@ module.exports = {
   getListAppsUrl,
   getLoginUrl,
   getRepositoryUrl,
+  getCliConfigUrl,
   getUploadBundleUrl,
 };
