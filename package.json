@@ -43,6 +43,7 @@
     "easy-table": "^1.1.1",
     "inquirer": "^5.1.0",
     "latest-version": "^4.0.0",
+    "package": "^1.0.1",
     "prompt": "^1.0.0",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",

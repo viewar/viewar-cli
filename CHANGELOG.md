@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Check for correct node version.
+
 ## [0.7.0]
 
 ### Added
