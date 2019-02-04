@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Added
+
+- Sort account selection by name.
+- Show app creation errors from server.
+
 ## [0.8.0]
 
 ### Added

@@ -87,7 +87,15 @@ module.exports = async (directory, projectType, userEmail) => {
       name: 'token',
       type: 'list',
       message: 'Select the user account for this app:',
-      choices: userList.map(({ name, email }) => `${name} <${email}>`),
+      choices: userList
+        .sort((a, b) => {
+          // Sort by name (A-Z).
+          const nameA = a.name.toUpperCase();
+          const nameB = b.name.toUpperCase();
+
+          return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+        })
+        .map(({ name, email }) => `${name} <${email}>`),
       filter: choice =>
         userList.find(({ name, email }) => `${name} <${email}>` === choice)
           .token,
@@ -213,7 +221,26 @@ module.exports = async (directory, projectType, userEmail) => {
 
   console.log(chalk`\nCreating app...`);
 
-  await request.post({ uri: createAppUrl(), formData });
+  let error = false;
+  const resultJSON = await request.post({ uri: createAppUrl(), formData });
+  try {
+    const result = JSON.parse(resultJSON);
+    if (result.status === 'error') {
+      console.log(chalk.red.bold(`\n${result.message}`));
+      error = true;
+    }
+  } catch (e) {
+    console.log(
+      chalk.red.bold(
+        `\nUnknown error while creating app on server: ${e.message}`
+      )
+    );
+    error = true;
+  }
+
+  if (error) {
+    return;
+  }
 
   if (sampleUrl || sample) {
     console.log(chalk`\nChecking out sample project...`);
