@@ -4,6 +4,7 @@ const path = require('path');
 const shell = require('shelljs');
 const inquirer = require('inquirer');
 const request = require('request-promise');
+const login = require('./login');
 
 const getTemplateConfig = require('../common/get-template-config');
 const exitWithError = require('../common/exit-with-error');
@@ -17,6 +18,11 @@ const {
   sampleProjects,
 } = require('../common/constants');
 const deploy = require('../commands/deploy');
+
+function getUserList() {
+  const { users = {} } = readJson(cliConfigFile);
+  return Object.values(users);
+}
 
 module.exports = async (directory, projectType, userEmail) => {
   let projectDir = path.resolve(process.cwd());
@@ -42,14 +48,13 @@ module.exports = async (directory, projectType, userEmail) => {
         .split(path.sep)
         .pop();
 
-  const { users = {}, overrides = {} } = readJson(cliConfigFile);
+  const { overrides = {} } = readJson(cliConfigFile);
 
-  const userList = Object.values(users);
+  let userList = getUserList();
 
   if (userList.length === 0) {
-    exitWithError(
-      'There are no users logged in! Run "viewar-cli login" first!'
-    );
+    await login();
+    userList = getUserList();
   }
 
   const enteredUser =
@@ -221,25 +226,14 @@ module.exports = async (directory, projectType, userEmail) => {
 
   console.log(chalk`\nCreating app...`);
 
-  let error = false;
   const resultJSON = await request.post({ uri: createAppUrl(), formData });
   try {
     const result = JSON.parse(resultJSON);
     if (result.status === 'error') {
-      console.log(chalk.red.bold(`\n${result.message}`));
-      error = true;
+      exitWithError(`${result.message}`);
     }
   } catch (e) {
-    console.log(
-      chalk.red.bold(
-        `\nUnknown error while creating app on server: ${e.message}`
-      )
-    );
-    error = true;
-  }
-
-  if (error) {
-    return;
+    exitWithError(`Unknown error while creating app on server: ${e.message}`);
   }
 
   if (sampleUrl || sample) {

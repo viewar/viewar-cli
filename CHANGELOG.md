@@ -2,8 +2,11 @@
 
 ## [Unreleased]
 
+## [0.8.1]
+
 ### Added
 
+- Show login when calling init with no previous logins.
 - Sort account selection by name.
 - Show app creation errors from server.
 
