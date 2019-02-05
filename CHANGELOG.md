@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.8.2]
+
+### Changed
+
+- Split react and vanilla boilerplate apps into two separate repositories.
+
 ## [0.8.1]
 
 ### Added

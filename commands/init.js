@@ -10,10 +10,13 @@ const getTemplateConfig = require('../common/get-template-config');
 const exitWithError = require('../common/exit-with-error');
 const generateToken = require('../common/generate-token');
 const { readJson, updateJson, writeJson } = require('../common/json');
-const { createAppUrl, getRepositoryUrl } = require('../common/urls');
+const {
+  createAppUrl,
+  getRepositoryUrl,
+  getBoilerplateRepositoryUrl,
+} = require('../common/urls');
 const {
   cliConfigPath: cliConfigFile,
-  repositoryUrl,
   projectTypes,
   sampleProjects,
 } = require('../common/constants');
@@ -257,9 +260,9 @@ module.exports = async (directory, projectType, userEmail) => {
     if (override) {
       shell.cp('-rf', `${override}/*`, '.');
     } else {
-      shell.exec(`git clone -b master ${repositoryUrl} temp`, { silent: true });
-      shell.mv(`./temp/${type}/*`, `.`);
-      shell.rm('-rf', 'temp');
+      shell.exec(`git clone -b master ${getBoilerplateRepositoryUrl(type)} .`, {
+        silent: true,
+      });
     }
   }
 

@@ -5,7 +5,6 @@ const defaultCliConfig = {
   users: {},
   overrides: {},
 };
-const repositoryUrl = 'https://github.com/viewar/viewar-boilerplate.git';
 
 const projectTypes = {
   'Vanilla Javascript': 'vanilla',
@@ -25,7 +24,6 @@ const sampleProjects = {
 module.exports = {
   cliConfigPath,
   defaultCliConfig,
-  repositoryUrl,
   projectTypes,
   sampleProjects,
 };
