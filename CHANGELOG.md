@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.8.3]
+
+### Added
+
+- Check authentication before building an app with deploy.
+
 ## [0.8.2]
 
 ### Changed

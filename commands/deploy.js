@@ -44,6 +44,35 @@ module.exports = async (appId, appVersion, tags = '') => {
     appVersion = appInfo.appVersion || appInfo.version;
   }
 
+  const info = await request
+    .post(getAppConfigUrl(appId, appVersion))
+    .then(JSON.parse);
+
+  if (!info) {
+    exitWithError('Wrong bundle ID or version!');
+  }
+
+  // Check authentication.
+  const ownerId = info.config.channel;
+  const data = readJson(cliConfigPath);
+  const user = data.users[ownerId];
+
+  if (!user) {
+    exitWithError(`App owner is not logged in!`);
+  }
+
+  const authResponse = await request
+    .post(
+      getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`, true)
+    )
+    .then(JSON.parse);
+
+  const { status: authStatus, message: authMessage } = authResponse;
+
+  if (authStatus !== 'ok') {
+    exitWithError(authMessage);
+  }
+
   console.log(chalk`\nBundling app...`);
 
   shell.exec('npm run build', { silent: true });
@@ -99,24 +128,6 @@ module.exports = async (appId, appVersion, tags = '') => {
   shell.rm('-rf', buildDir);
 
   console.log(chalk`\nActivating bundle...`);
-
-  const info = await request
-    .post(getAppConfigUrl(appId, appVersion))
-    .then(JSON.parse);
-
-  if (!info) {
-    exitWithError('Wrong bundle ID or version!');
-  }
-
-  const ownerId = info.config.channel;
-
-  const data = readJson(cliConfigPath);
-
-  const user = data.users[ownerId];
-
-  if (!user) {
-    exitWithError(`App owner is not logged in!`);
-  }
 
   const response = await request
     .post(getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`))
