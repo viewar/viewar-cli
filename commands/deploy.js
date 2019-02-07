@@ -53,6 +53,11 @@ module.exports = async (appId, appVersion, tags = '') => {
   }
 
   // Check authentication.
+  const timestamp = new Date()
+    .toISOString()
+    .replace(/\..*$/, '')
+    .replace(/[-T:]/g, '');
+
   const ownerId = info.config.channel;
   const data = readJson(cliConfigPath);
   const user = data.users[ownerId];
@@ -107,11 +112,6 @@ module.exports = async (appId, appVersion, tags = '') => {
   });
 
   await zipDirectory(buildDir, bundlePath);
-
-  const timestamp = new Date()
-    .toISOString()
-    .replace(/\..*$/, '')
-    .replace(/[-T:]/g, '');
 
   console.log(chalk`\nUploading app bundle...`);
 

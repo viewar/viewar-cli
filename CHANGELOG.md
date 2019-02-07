@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-## [0.8.3]
+## [0.8.4]
+
+### Fixed
+
+- Fixed missing variable error when deploying.
+
+## [0.8.3] broken
 
 ### Added
 
