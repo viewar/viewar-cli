@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.9.0]
+
+### Added
+
+- Added check if git is installed for init command.
+
 ## [0.8.4]
 
 ### Fixed

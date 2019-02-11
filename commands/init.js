@@ -28,6 +28,10 @@ function getUserList() {
 }
 
 module.exports = async (directory, projectType, userEmail) => {
+  if (!shell.which('git')) {
+    exitWithError('You need to install git first to initialize a new project!');
+  }
+
   let projectDir = path.resolve(process.cwd());
   if (directory) {
     projectDir += `/${directory}`;
