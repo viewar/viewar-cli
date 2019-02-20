@@ -13,7 +13,7 @@ const projectTypes = {
 };
 
 const sampleProjects = {
-  Base6: 'base6',
+  'Base6 (Furniture Live, Products Live, WallArt)': 'base6',
   'QR Navigation': 'qrnavigation',
   'Vanilla sample': 'vanilla',
   'Helpar Object Tracking': 'helpar-objecttracking',
