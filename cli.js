@@ -1,5 +1,6 @@
 const program = require('commander');
 const shell = require('shelljs');
+const chalk = require('chalk');
 
 const currentVersion = require('./package.json').version;
 const {
@@ -30,12 +31,11 @@ checkVersion().then(() => {
 
   program
     .command('generate')
-    .alias('generate-token')
     .description('Generates new upload token')
     .action(generate);
 
   program
-    .command('set <app-id> <app-version>')
+    .command('set [app-id] [app-version]')
     .description('Sets app bundle ID and version')
     .action(set);
 
@@ -45,7 +45,7 @@ checkVersion().then(() => {
     .action(login);
 
   program
-    .command('logout <user-email>')
+    .command('logout [user-email]')
     .description('Logs out user')
     .action(logout);
 
@@ -71,8 +71,8 @@ checkVersion().then(() => {
       .map(cmd => cmd._name)
       .includes(program.args.map(cmd => cmd && cmd._name).filter(x => x)[0])
   ) {
-    console.log(
-      `viewar-cli: '${program.args[0]}' is not a viewar-cli command.`
+    console.error(
+      chalk`{red viewar-cli: '${program.args[0]}' is not a viewar-cli command.}`
     );
     program.help();
   }

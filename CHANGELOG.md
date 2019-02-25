@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Removed
+
+- Removed alias generate-token (use generate only).
+
+### Changed
+
+- Renamed base6 sample to Furniture Live/Products Live/WallArt.
+
 ## [0.9.0]
 
 ### Added
