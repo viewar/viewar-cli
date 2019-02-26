@@ -124,7 +124,7 @@ module.exports = async (directory, projectType, userEmail) => {
     {
       name: 'sample',
       type: 'list',
-      message: 'Select a sample project',
+      message: 'Select a template project',
       choices: Object.keys(sampleProjects),
       filter: value => sampleProjects[value],
       when: ({ type }) =>

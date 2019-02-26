@@ -8,12 +8,13 @@ const defaultCliConfig = {
 
 const projectTypes = {
   'Vanilla Javascript': 'vanilla',
-  React: 'react',
-  'Sample project': 'sample',
+  'React': 'react',
+  'Template': 'sample',
 };
 
 const sampleProjects = {
   'Base6 (Furniture Live, Products Live, WallArt)': 'base6',
+  'GuideBOT': 'guidebot',
   'QR Navigation': 'qrnavigation',
   'Vanilla sample': 'vanilla',
   'Helpar Object Tracking': 'helpar-objecttracking',

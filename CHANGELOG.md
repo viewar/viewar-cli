@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.10.0]
+
+### Added
+
+- Added GuideBOT Template
+
 ### Removed
 
 - Removed alias generate-token (use generate only).
