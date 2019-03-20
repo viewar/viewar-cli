@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.10.1]
+
+### Fixed
+
+- Fixed 'Vanilla Javascript' and 'React' project types.
+
 ## [0.10.0]
 
 ### Added
