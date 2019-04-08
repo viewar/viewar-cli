@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.10.2]
+
+### Fixed
+
+- Use version 100 if no version is given as argument in command "deploy".
+
 ## [0.10.1]
 
 ### Fixed

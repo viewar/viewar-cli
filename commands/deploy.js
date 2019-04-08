@@ -44,6 +44,10 @@ module.exports = async (appId, appVersion, tags = '') => {
     appVersion = appInfo.appVersion || appInfo.version;
   }
 
+  if (!appVersion) {
+    appVersion = 100;
+  }
+
   const info = await request
     .post(getAppConfigUrl(appId, appVersion))
     .then(JSON.parse);
