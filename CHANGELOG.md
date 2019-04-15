@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.10.3]
+
+### Changed
+
+- Renamed template section.
+
 ## [0.10.2]
 
 ### Fixed
