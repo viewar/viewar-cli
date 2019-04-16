@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.11.1]
+
+### Changed
+
+- Display detailed login error message.
+
 ## [0.11.0]
 
 ### Changed

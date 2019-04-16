@@ -11,6 +11,10 @@ import { getLoginUrl } from '../common/urls';
 export default async userEmail => {
   const validateEmail = value => /.+@.+\..+/.test(value);
 
+  console.log('Log in with your ViewAR account.');
+  console.log(
+    `If you don't have an account, create one at developer.viewar.com.`
+  );
   const { email = userEmail, password } = await inquirer.prompt([
     {
       type: 'input',
@@ -48,6 +52,6 @@ export default async userEmail => {
     });
     console.log(`User ${userName} <${email}> logged in.`);
   } else {
-    exitWithError('Authentication failed! Wrong email or password!');
+    exitWithError(`Authentication failed! (${response.error})`);
   }
 };
