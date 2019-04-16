@@ -7,7 +7,7 @@ import shebang from '@robmarr/rollup-plugin-shebang';
 const banner = '/** ViewAR CLI **/';
 
 export default {
-  input: 'src/index.js',
+  input: 'index.js',
   output: {
     banner,
     file: 'dist/index.js',

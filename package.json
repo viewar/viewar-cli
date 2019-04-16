@@ -36,8 +36,8 @@
     "node": ">=8"
   },
   "bin": {
-    "viewar-cli": "index.js",
-    "viewar": "index.js"
+    "viewar-cli": "dist/index.js",
+    "viewar": "dist/index.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
