@@ -1,8 +1,8 @@
-const fs = require('fs');
+import fs from 'fs';
 
-const exitWithError = require('./exit-with-error');
+import exitWithError from './exit-with-error';
 
-const readJson = (filename, errorMessage) => {
+export const readJson = (filename, errorMessage) => {
   try {
     return JSON.parse(fs.readFileSync(filename, 'utf8'));
   } catch (error) {
@@ -13,7 +13,7 @@ const readJson = (filename, errorMessage) => {
   }
 };
 
-const writeJson = (filename, object, errorMessage) => {
+export const writeJson = (filename, object, errorMessage) => {
   try {
     fs.writeFileSync(filename, JSON.stringify(object, null, '  '), 'utf8');
   } catch (error) {
@@ -21,12 +21,6 @@ const writeJson = (filename, object, errorMessage) => {
   }
 };
 
-const updateJson = (path, fn) => {
+export const updateJson = (path, fn) => {
   writeJson(path, fn(readJson(path)));
-};
-
-module.exports = {
-  readJson,
-  updateJson,
-  writeJson,
 };

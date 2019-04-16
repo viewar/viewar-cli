@@ -1,7 +1,7 @@
-const { updateJson } = require('../common/json');
-const { cliConfigPath } = require('../common/constants');
+import { updateJson } from '../common/json';
+import { cliConfigPath } from '../common/constants';
 
-module.exports = async username => {
+export default async username => {
   updateJson(cliConfigPath, config => {
     config.users = config.users || {};
     const userId = Object.keys(config.users).find(

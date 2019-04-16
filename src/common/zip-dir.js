@@ -1,7 +1,7 @@
-const fs = require('fs');
-const archiver = require('archiver');
+import fs from 'fs';
+import archiver from 'archiver';
 
-module.exports = (dirPath, zipPath) => {
+export default (dirPath, zipPath) => {
   return new Promise((resolve, reject) => {
     const output = fs.createWriteStream(zipPath);
 

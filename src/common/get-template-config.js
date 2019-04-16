@@ -1,7 +1,7 @@
-const request = require('request-promise');
-const { getCliConfigUrl } = require('./urls');
+import request from 'request-promise';
+import { getCliConfigUrl } from './urls';
 
-module.exports = async sample => {
+export default async sample => {
   if (sample) {
     const url = getCliConfigUrl(sample);
     try {

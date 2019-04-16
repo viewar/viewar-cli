@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.11.0]
+
+### Changed
+
+- Revamped code bundling.
+
 ## [0.10.3]
 
 ### Changed

@@ -1,33 +1,33 @@
-const chalk = require('chalk');
-const fs = require('fs');
-const path = require('path');
-const shell = require('shelljs');
-const inquirer = require('inquirer');
-const request = require('request-promise');
-const login = require('./login');
+import chalk from 'chalk';
+import fs from 'fs';
+import path from 'path';
+import shell from 'shelljs';
+import inquirer from 'inquirer';
+import request from 'request-promise';
+import login from './login';
 
-const getTemplateConfig = require('../common/get-template-config');
-const exitWithError = require('../common/exit-with-error');
-const generateToken = require('../common/generate-token');
-const { readJson, updateJson, writeJson } = require('../common/json');
-const {
+import getTemplateConfig from '../common/get-template-config';
+import exitWithError from '../common/exit-with-error';
+import generateToken from '../common/generate-token';
+import { readJson, updateJson, writeJson } from '../common/json';
+import {
   createAppUrl,
   getRepositoryUrl,
   getBoilerplateRepositoryUrl,
-} = require('../common/urls');
-const {
-  cliConfigPath: cliConfigFile,
+} from '../common/urls';
+import {
+  cliConfigPath,
   projectTypes,
   sampleProjects,
-} = require('../common/constants');
-const deploy = require('../commands/deploy');
+} from '../common/constants';
+import deploy from '../commands/deploy';
 
 function getUserList() {
-  const { users = {} } = readJson(cliConfigFile);
+  const { users = {} } = readJson(cliConfigPath);
   return Object.values(users);
 }
 
-module.exports = async (directory, projectType, userEmail) => {
+export default async (directory, projectType, userEmail) => {
   if (!shell.which('git')) {
     exitWithError('You need to install git first to initialize a new project!');
   }
@@ -39,7 +39,7 @@ module.exports = async (directory, projectType, userEmail) => {
   }
 
   const packageInfoPath = path.resolve(projectDir, 'package.json');
-  const cliConfigPath = path.resolve(projectDir, '.viewar-config');
+  const configPath = path.resolve(projectDir, '.viewar-config');
   const dirEmpty = shell.ls(projectDir).length === 0;
 
   if (!dirEmpty) {
@@ -55,7 +55,7 @@ module.exports = async (directory, projectType, userEmail) => {
         .split(path.sep)
         .pop();
 
-  const { overrides = {} } = readJson(cliConfigFile);
+  const { overrides = {} } = readJson(configPath);
 
   let userList = getUserList();
 

@@ -1,12 +1,12 @@
-const request = require('request-promise');
-const Table = require('easy-table');
+import request from 'request-promise';
+import Table from 'easy-table';
 
-const exitWithError = require('../common/exit-with-error');
-const { readJson } = require('../common/json');
-const { getListAppsUrl } = require('../common/urls');
-const { cliConfigPath } = require('../common/constants');
+import exitWithError from '../common/exit-with-error';
+import { readJson } from '../common/json';
+import { getListAppsUrl } from '../common/urls';
+import { cliConfigPath } from '../common/constants';
 
-module.exports = async email => {
+export default async email => {
   const data = readJson(cliConfigPath);
 
   const users = Object.values(data.users || {}).filter(

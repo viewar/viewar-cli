@@ -1,14 +1,14 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 const hash = crypto.createHash('md5');
-const inquirer = require('inquirer');
-const request = require('request-promise');
+import inquirer from 'inquirer';
+import request from 'request-promise';
 
-const exitWithError = require('../common/exit-with-error');
-const { updateJson } = require('../common/json');
-const { cliConfigPath } = require('../common/constants');
-const { getLoginUrl } = require('../common/urls');
+import exitWithError from '../common/exit-with-error';
+import { updateJson } from '../common/json';
+import { cliConfigPath } from '../common/constants';
+import { getLoginUrl } from '../common/urls';
 
-module.exports = async userEmail => {
+export default async userEmail => {
   const validateEmail = value => /.+@.+\..+/.test(value);
 
   const { email = userEmail, password } = await inquirer.prompt([

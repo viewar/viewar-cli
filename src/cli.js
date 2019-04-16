@@ -1,21 +1,22 @@
-const program = require('commander');
-const shell = require('shelljs');
-const chalk = require('chalk');
+import program from 'commander';
+import shell from 'shelljs';
+import chalk from 'chalk';
 
-const currentVersion = require('./package.json').version;
-const {
-  deploy,
-  init,
-  list,
-  login,
-  logout,
-  generate,
-  set,
-  whoami,
-} = require('./commands');
-const { writeJson } = require('./common/json');
-const { cliConfigPath, defaultCliConfig } = require('./common/constants');
-const checkVersion = require('./common/check-version');
+import packageJson from '../package.json';
+const currentVersion = packageJson.version;
+
+import deploy from './commands/deploy';
+import init from './commands/init';
+import list from './commands/list';
+import login from './commands/login';
+import logout from './commands/logout';
+import generate from './commands/generate';
+import set from './commands/set';
+import whoami from './commands/whoami';
+
+import { writeJson } from './common/json';
+import { cliConfigPath, defaultCliConfig } from './common/constants';
+import checkVersion from './common/check-version';
 
 if (!shell.test('-f', cliConfigPath)) {
   writeJson(cliConfigPath, defaultCliConfig);

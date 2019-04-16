@@ -1,6 +1,6 @@
-const chalk = require('chalk');
+import chalk from 'chalk';
 
-module.exports = (message, errorCode = 1) => {
+export default (message, errorCode = 1) => {
   console.error(chalk`{red ERROR: ${message}}`);
   process.exit(errorCode);
 };

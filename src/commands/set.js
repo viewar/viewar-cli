@@ -1,7 +1,7 @@
-const path = require('path');
-const { updateJson } = require('../common/json');
+import path from 'path';
+import { updateJson } from '../common/json';
 
-module.exports = async (appId, appVersion) => {
+export default async (appId, appVersion) => {
   const projectDir = path.resolve(process.cwd());
   const cliConfigPath = path.resolve(projectDir, '.viewar-config');
 

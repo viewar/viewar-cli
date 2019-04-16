@@ -1,7 +1,7 @@
-const { cliConfigPath } = require('../common/constants');
-const { readJson } = require('../common/json');
+import { cliConfigPath } from '../common/constants';
+import { readJson } from '../common/json';
 
-module.exports = () => {
+export default () => {
   const data = readJson(cliConfigPath);
   console.log(
     Object.values(data.users)

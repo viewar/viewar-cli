@@ -1,9 +1,9 @@
-const path = require('path');
+import path from 'path';
 
-const generateToken = require('../common/generate-token');
-const { updateJson } = require('../common/json');
+import generateToken from '../common/generate-token';
+import { updateJson } from '../common/json';
 
-module.exports = async () => {
+export default async () => {
   const projectDir = path.resolve(process.cwd());
   const appInfoPath = path.resolve(projectDir, '.viewar-config');
 

@@ -1,10 +1,12 @@
-const chalk = require('chalk');
-const currentVersion = require('../package.json').version;
-const latestVersion = require('latest-version');
-const semver = require('semver');
+import chalk from 'chalk';
+import latestVersion from 'latest-version';
+import semver from 'semver';
+import packageJson from '../../package.json';
 
-module.exports = (timeout = 2000) =>
-  Promise.race([
+export default (timeout = 2000) => {
+  const currentVersion = packageJson.version;
+
+  return Promise.race([
     new Promise(resolve => setTimeout(resolve, timeout)),
     latestVersion('viewar-cli').then(version => {
       if (!semver.satisfies(currentVersion, `>=${version}`)) {
@@ -16,3 +18,4 @@ module.exports = (timeout = 2000) =>
       }
     }),
   ]);
+};
