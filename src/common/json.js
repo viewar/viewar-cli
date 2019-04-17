@@ -1,4 +1,4 @@
-import fs from 'fs';
+const fs = require('fs');
 
 import exitWithError from './exit-with-error';
 

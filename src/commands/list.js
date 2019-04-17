@@ -1,5 +1,5 @@
-import request from 'request-promise';
-import Table from 'easy-table';
+const request = require('request-promise');
+const Table = require('easy-table');
 
 import exitWithError from '../common/exit-with-error';
 import { readJson } from '../common/json';

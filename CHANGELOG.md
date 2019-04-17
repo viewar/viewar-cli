@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.11.2]
+
+### Fixed
+
+- Major issues in code bundling.
+
 ## [0.11.1]
 
 ### Changed

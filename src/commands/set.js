@@ -1,4 +1,4 @@
-import path from 'path';
+const path = require('path');
 import { updateJson } from '../common/json';
 
 export default async (appId, appVersion) => {

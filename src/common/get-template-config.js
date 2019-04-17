@@ -1,4 +1,4 @@
-import request from 'request-promise';
+const request = require('request-promise');
 import { getCliConfigUrl } from './urls';
 
 export default async sample => {

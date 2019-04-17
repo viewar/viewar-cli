@@ -1,4 +1,4 @@
-import path from 'path';
+const path = require('path');
 
 import generateToken from '../common/generate-token';
 import { updateJson } from '../common/json';

@@ -1,5 +1,5 @@
-import fs from 'fs';
-import archiver from 'archiver';
+const fs = require('fs');
+const archiver = require('archiver');
 
 export default (dirPath, zipPath) => {
   return new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
-import chalk from 'chalk';
-import latestVersion from 'latest-version';
-import semver from 'semver';
+const chalk = require('chalk');
+const latestVersion = require('latest-version');
+const semver = require('semver');
 import packageJson from '../../package.json';
 
 export default (timeout = 2000) => {

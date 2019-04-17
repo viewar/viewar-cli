@@ -1,7 +1,7 @@
-import crypto from 'crypto';
+const crypto = require('crypto');
 const hash = crypto.createHash('md5');
-import inquirer from 'inquirer';
-import request from 'request-promise';
+const inquirer = require('inquirer');
+const request = require('request-promise');
 
 import exitWithError from '../common/exit-with-error';
 import { updateJson } from '../common/json';

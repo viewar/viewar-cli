@@ -1,4 +1,4 @@
-import os from 'os';
+const os = require('os');
 
 export const cliConfigPath = `${os.homedir()}/.viewar-cli`;
 

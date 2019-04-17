@@ -1,8 +1,8 @@
-import chalk from 'chalk';
-import path from 'path';
-import fs from 'fs';
-import shell from 'shelljs';
-import request from 'request-promise';
+const chalk = require('chalk');
+const path = require('path');
+const fs = require('fs');
+const shell = require('shelljs');
+const request = require('request-promise');
 
 import exitWithError from '../common/exit-with-error';
 import zipDirectory from '../common/zip-dir';

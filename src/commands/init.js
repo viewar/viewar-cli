@@ -1,9 +1,9 @@
-import chalk from 'chalk';
-import fs from 'fs';
-import path from 'path';
-import shell from 'shelljs';
-import inquirer from 'inquirer';
-import request from 'request-promise';
+const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
+const shell = require('shelljs');
+const inquirer = require('inquirer');
+const request = require('request-promise');
 import login from './login';
 
 import getTemplateConfig from '../common/get-template-config';
