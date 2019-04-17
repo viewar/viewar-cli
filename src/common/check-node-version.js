@@ -6,11 +6,12 @@ const requirements = {
   node: '>= 8',
 };
 
-export default async () => {
-  await new Promise(resolve => {
+export default () => {
+  return new Promise(resolve => {
     check(requirements, (error, results) => {
       if (error) {
         console.error(error);
+        resolve();
         return;
       }
 

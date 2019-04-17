@@ -1,18 +1,26 @@
+import exitWithError from '../common/exit-with-error';
 import { updateJson } from '../common/json';
 import { cliConfigPath } from '../common/constants';
 
-export default async username => {
+export default async email => {
+  if (!email) {
+    exitWithError(
+      'No email address given. Please provide an email address as first argument.'
+    );
+  }
+
   updateJson(cliConfigPath, config => {
     config.users = config.users || {};
+
     const userId = Object.keys(config.users).find(
-      userId => username === config.users[userId].name
+      userId => email === config.users[userId].email
     );
 
     if (config.users[userId]) {
       config.users[userId] = undefined;
-      console.log(`User ${username} logged out.`);
+      console.log(`User ${email} logged out.`);
     } else {
-      console.log(`User ${username} is not logged in!`);
+      console.log(`User ${email} is not logged in!`);
     }
 
     return config;

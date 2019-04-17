@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.11.3]
+
+### Fixed
+
+- Fixed logout command.
+
 ## [0.11.2]
 
 ### Fixed

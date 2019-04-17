@@ -49,13 +49,13 @@ export default async (directory, projectType, userEmail) => {
   shell.cd(projectDir);
 
   const projectName = directory
-    ? directory
+    ? directory.split('/').pop()
     : process
         .cwd()
         .split(path.sep)
         .pop();
 
-  const { overrides = {} } = readJson(configPath);
+  const { overrides = {} } = readJson(cliConfigPath);
 
   let userList = getUserList();
 
@@ -291,7 +291,7 @@ export default async (directory, projectType, userEmail) => {
     })
   );
 
-  writeJson(cliConfigPath, {
+  writeJson(configPath, {
     id: generateToken(),
     token: generateToken(),
     appId,
