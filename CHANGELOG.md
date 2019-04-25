@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.11.4]
+
+### Fixed
+
+- Correctly check for sample project/template selection.
+
 ## [0.11.3]
 
 ### Fixed

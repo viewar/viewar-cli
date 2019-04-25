@@ -10,7 +10,7 @@ export const defaultCliConfig = {
 export const projectTypes = {
   'Vanilla Javascript': 'vanilla',
   React: 'react',
-  'Sample Project/Template': 'sample',
+  'Sample Project/Template': 'sample', // Also change "when" clause in init's "Select a template project" if we rename the sample project type.
 };
 
 export const sampleProjects = {
