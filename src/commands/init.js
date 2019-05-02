@@ -127,7 +127,7 @@ export default async (directory, projectType, userEmail) => {
       message: 'Select a template project',
       choices: Object.keys(sampleProjects),
       filter: value => sampleProjects[value],
-      when: ({ type }) => type === projectTypes['Sample Project/Template'], // Adapt this if you change sample project type name in constants.js.
+      when: ({ type }) => type === 'sample', // Adapt this if you change sample project type name in constants.js.
     },
     {
       name: 'sampleUrl',
