@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Improved .viewar-config generation (if npm install fails).
 - Ask for another app ID if entered ID is already existing.
 
 ## [0.11.4]

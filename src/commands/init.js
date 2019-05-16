@@ -302,11 +302,24 @@ export default async (directory, projectType, userEmail) => {
     }
   }
 
+  writeJson(configPath, {
+    id: generateToken(),
+    token: generateToken(),
+    appId,
+    appVersion,
+  });
+
+  fs.writeFileSync(
+    '.gitignore',
+    ['.viewar-config', 'node_modules/', 'build/'].join('\n'),
+    'utf8'
+  );
+
   console.log(chalk`\nInstalling dependencies...`);
 
   if (shell.exec('npm install', { silent: true }).code !== 0) {
     exitWithError(
-      `Failed installing npm dependencies! Check if npm is installed and up-to-date.`
+      `Failed installing npm dependencies! Check if npm is installed and up-to-date. Then manually run 'npm install'.`
     );
   }
 
@@ -323,19 +336,6 @@ export default async (directory, projectType, userEmail) => {
       name: projectName,
       description: '',
     })
-  );
-
-  writeJson(configPath, {
-    id: generateToken(),
-    token: generateToken(),
-    appId,
-    appVersion,
-  });
-
-  fs.writeFileSync(
-    '.gitignore',
-    ['.viewar-config', 'node_modules/', 'build/'].join('\n'),
-    'utf8'
   );
 
   await deploy(appId, appVersion, 'initial');
