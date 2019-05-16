@@ -1,10 +1,15 @@
 import exitWithError from '../common/exit-with-error';
 import { updateJson } from '../common/json';
 import { cliConfigPath } from '../common/constants';
+import logger from '../logger/logger';
 
 export default async email => {
+  logger.setInfo('logout', {
+    email,
+  });
+
   if (!email) {
-    exitWithError(
+    await exitWithError(
       'No email address given. Please provide an email address as first argument.'
     );
   }

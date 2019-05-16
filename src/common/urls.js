@@ -29,3 +29,5 @@ export const getBoilerplateRepositoryUrl = name =>
 
 export const getCliConfigUrl = (templateName, branch = 'master') =>
   `https://raw.githubusercontent.com/viewar/viewar-template-${templateName}/${branch}/.viewar-template-config.json`;
+
+export const getErrorLogUrl = () => `http://api.viewar.com/api30/log/`;

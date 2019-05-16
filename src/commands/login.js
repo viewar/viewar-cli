@@ -7,8 +7,13 @@ import exitWithError from '../common/exit-with-error';
 import { updateJson } from '../common/json';
 import { cliConfigPath } from '../common/constants';
 import { getLoginUrl } from '../common/urls';
+import logger from '../logger/logger';
 
 export default async userEmail => {
+  logger.setInfo('deploy', {
+    userEmail,
+  });
+
   const validateEmail = value => /.+@.+\..+/.test(value);
 
   console.log('Log in with your ViewAR account.');
@@ -52,6 +57,6 @@ export default async userEmail => {
     });
     console.log(`User ${userName} <${email}> logged in.`);
   } else {
-    exitWithError(`Authentication failed! (${response.error})`);
+    await exitWithError(`Authentication failed! (${response.error})`);
   }
 };

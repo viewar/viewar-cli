@@ -21,15 +21,24 @@ import {
   sampleProjects,
 } from '../common/constants';
 import deploy from '../commands/deploy';
+import logger from '../logger/logger';
 
-function getUserList() {
-  const { users = {} } = readJson(cliConfigPath);
+async function getUserList() {
+  const { users = {} } = await readJson(cliConfigPath);
   return Object.values(users);
 }
 
 export default async (directory, projectType, userEmail) => {
+  logger.setInfo('init', {
+    directory,
+    projectType,
+    userEmail,
+  });
+
   if (!shell.which('git')) {
-    exitWithError('You need to install git first to initialize a new project!');
+    await exitWithError(
+      'You need to install git first to initialize a new project!'
+    );
   }
 
   let projectDir = path.resolve(process.cwd());
@@ -43,7 +52,7 @@ export default async (directory, projectType, userEmail) => {
   const dirEmpty = shell.ls(projectDir).length === 0;
 
   if (!dirEmpty) {
-    exitWithError('Directory not empty!');
+    await exitWithError('Directory not empty!');
   }
 
   shell.cd(projectDir);
@@ -55,20 +64,20 @@ export default async (directory, projectType, userEmail) => {
         .split(path.sep)
         .pop();
 
-  const { overrides = {} } = readJson(cliConfigPath);
+  const { overrides = {} } = await readJson(cliConfigPath);
 
-  let userList = getUserList();
+  let userList = await getUserList();
 
   if (userList.length === 0) {
     await login();
-    userList = getUserList();
+    userList = await getUserList();
   }
 
   const enteredUser =
     userEmail && userList.find(user => user.email === userEmail);
 
   if (userEmail && !enteredUser) {
-    exitWithError(
+    await exitWithError(
       `User with email ${userEmail} is not logged in!  Run viewar-api whoami to see which user accounts are logged in!`
     );
   }
@@ -264,11 +273,13 @@ export default async (directory, projectType, userEmail) => {
           formData.bundleIdentifier = appId;
           await createApp();
         } else {
-          exitWithError(`${result.message}`);
+          await exitWithError(`${result.message}`);
         }
       }
     } catch (e) {
-      exitWithError(`Unknown error while creating app on server: ${e.message}`);
+      await exitWithError(
+        `Unknown error while creating app on server: ${e.message}`
+      );
     }
   };
 
@@ -318,7 +329,7 @@ export default async (directory, projectType, userEmail) => {
   console.log(chalk`\nInstalling dependencies...`);
 
   if (shell.exec('npm install', { silent: true }).code !== 0) {
-    exitWithError(
+    await exitWithError(
       `Failed installing npm dependencies! Check if npm is installed and up-to-date. Then manually run 'npm install'.`
     );
   }
@@ -326,7 +337,7 @@ export default async (directory, projectType, userEmail) => {
   console.log(chalk`\nInitializing git repository...`);
 
   if (shell.exec('git init', { silent: true }).code !== 0) {
-    exitWithError(
+    await exitWithError(
       `Git repository initialization failed! Check if git is installed.`
     );
   }

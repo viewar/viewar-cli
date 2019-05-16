@@ -5,16 +5,21 @@ import exitWithError from '../common/exit-with-error';
 import { readJson } from '../common/json';
 import { getListAppsUrl } from '../common/urls';
 import { cliConfigPath } from '../common/constants';
+import logger from '../logger/logger';
 
 export default async email => {
-  const data = readJson(cliConfigPath);
+  logger.setInfo('list', {
+    email,
+  });
+
+  const data = await readJson(cliConfigPath);
 
   const users = Object.values(data.users || {}).filter(
     user => !email || (user.email && user.email.includes(email))
   );
 
   if (!users.length) {
-    exitWithError(`User ${email} is not logged in!`);
+    await exitWithError(`User ${email} is not logged in!`);
   }
 
   for (const { id, name, email, token } of users) {
@@ -43,7 +48,7 @@ export default async email => {
       );
       console.log(table.toString());
     } else {
-      exitWithError(message);
+      await exitWithError(message);
     }
   }
 };

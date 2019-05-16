@@ -17,6 +17,7 @@ import whoami from './commands/whoami';
 import { writeJson } from './common/json';
 import { cliConfigPath, defaultCliConfig } from './common/constants';
 import checkVersion from './common/check-version';
+import logger from './logger/logger.js';
 
 export default () => {
   if (!shell.test('-f', cliConfigPath)) {
@@ -25,6 +26,7 @@ export default () => {
 
   checkVersion().then(() => {
     program.version(currentVersion);
+    program.option('-l, --log', 'Advanced error logging');
 
     program
       .command('init [folder] [type] [user-email]')
@@ -67,6 +69,8 @@ export default () => {
       .action(deploy);
 
     program.parse(process.argv);
+
+    logger.advancedLogging = !!program.log;
 
     if (
       !program.commands

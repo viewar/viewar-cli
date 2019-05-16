@@ -13,8 +13,15 @@ import {
   getUploadBundleUrl,
 } from '../common/urls';
 import { cliConfigPath } from '../common/constants';
+import logger from '../logger/logger';
 
 export default async (appId, appVersion, tags = '') => {
+  logger.setInfo('deploy', {
+    appId,
+    appVersion,
+    tags,
+  });
+
   const appRoot = process.cwd();
   const buildDir = path.resolve(appRoot, 'build') + '/';
   const bundlePath = path.resolve(appRoot, 'bundle.zip');
@@ -33,7 +40,7 @@ export default async (appId, appVersion, tags = '') => {
   );
   const bundleInfoPath = path.resolve(buildDir, 'bundle-info.json');
 
-  const appInfo = readJson(
+  const appInfo = await readJson(
     appInfoPath,
     "'.viewar-config' file not found! Working directory does not contain a ViewAR SDK app!"
   );
@@ -53,7 +60,7 @@ export default async (appId, appVersion, tags = '') => {
     .then(JSON.parse);
 
   if (!info) {
-    exitWithError('Wrong bundle ID or version!');
+    await exitWithError('Wrong bundle ID or version!');
   }
 
   // Check authentication.
@@ -63,11 +70,11 @@ export default async (appId, appVersion, tags = '') => {
     .replace(/[-T:]/g, '');
 
   const ownerId = info.config.channel;
-  const data = readJson(cliConfigPath);
+  const data = await readJson(cliConfigPath);
   const user = data.users[ownerId];
 
   if (!user) {
-    exitWithError(`App owner is not logged in!`);
+    await exitWithError(`App owner is not logged in!`);
   }
 
   const authResponse = await request
@@ -79,23 +86,23 @@ export default async (appId, appVersion, tags = '') => {
   const { status: authStatus, message: authMessage } = authResponse;
 
   if (authStatus !== 'ok') {
-    exitWithError(authMessage);
+    await exitWithError(authMessage);
   }
 
   console.log(chalk`\nBundling app...`);
 
   shell.exec('npm run build', { silent: true });
   if (!fs.existsSync('build')) {
-    exitWithError(
+    await exitWithError(
       'No build directory existing. Please run yarn build or npm run build manually to check the error message.'
     );
   }
 
-  const corePackageInfo = readJson(
+  const corePackageInfo = await readJson(
     corePackageInfoPath,
     "'viewar-core' npm dependency not found! Run 'npm install' to install it."
   );
-  const apiPackageInfo = readJson(
+  const apiPackageInfo = await readJson(
     apiPackageInfoPath,
     "'viewar-api' npm dependency not found! Run 'npm install' to install it."
   );
@@ -142,6 +149,6 @@ export default async (appId, appVersion, tags = '') => {
   if (status === 'ok') {
     console.log(chalk`\nDone!`);
   } else {
-    exitWithError(message);
+    await exitWithError(message);
   }
 };
