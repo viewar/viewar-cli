@@ -9,11 +9,11 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean; rollup -c",
-    "start": "npm run build; node dist/index.js",
+    "watch": "npm run build; rollup -c --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "version": "git add -A",
     "postversion": "git push origin HEAD && git push --tags",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "format": "prettier --single-quote --trailing-comma es5 '**/*.{js,md,json}' --write"
   },
   "repository": {

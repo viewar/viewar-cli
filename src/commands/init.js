@@ -151,7 +151,7 @@ export default async (directory, projectType, userEmail) => {
     },
   ]);
 
-  const { token, type, appId, appVersion, sample, sampleUrl } = Object.assign(
+  let { token, type, appId, appVersion, sample, sampleUrl } = Object.assign(
     {
       token: user && user.token,
       type: projectType,
@@ -229,17 +229,51 @@ export default async (directory, projectType, userEmail) => {
     );
   }
 
-  console.log(chalk`\nCreating app...`);
-
-  const resultJSON = await request.post({ uri: createAppUrl(), formData });
-  try {
-    const result = JSON.parse(resultJSON);
-    if (result.status === 'error') {
-      exitWithError(`${result.message}`);
+  const createApp = async () => {
+    try {
+      const resultJSON = await request.post({ uri: createAppUrl(), formData });
+      const result = JSON.parse(resultJSON);
+      if (result.status === 'error') {
+        if (result.error === 1) {
+          // Error code 1: App already existing. Inquire for new app id and version.
+          console.log(
+            chalk`{red App ID ${appId} with version ${appVersion} already existing, please choose another app ID.}`
+          );
+          const answer = await inquirer.prompt([
+            {
+              name: 'appId',
+              message: 'Enter the app ID:',
+              type: 'input',
+              validate: value =>
+                /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value),
+            },
+            {
+              name: 'appVersion',
+              type: 'input',
+              message: 'Enter the app version:',
+              default: '1.0',
+              validate: value => /\d+(?:\.\d+)?/.test(value),
+            },
+          ]);
+          appId = answer.appId;
+          appVersion = answer.appVersion;
+          Object.assign(formData, {
+            bundleIdentifier: appId,
+            version: appVersion,
+          });
+          formData.bundleIdentifier = appId;
+          await createApp();
+        } else {
+          exitWithError(`${result.message}`);
+        }
+      }
+    } catch (e) {
+      exitWithError(`Unknown error while creating app on server: ${e.message}`);
     }
-  } catch (e) {
-    exitWithError(`Unknown error while creating app on server: ${e.message}`);
-  }
+  };
+
+  console.log(chalk`\nCreating app...`);
+  await createApp();
 
   if (sampleUrl || sample) {
     console.log(chalk`\nChecking out sample project...`);

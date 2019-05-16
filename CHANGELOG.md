@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Ask for another app ID if entered ID is already existing.
+
 ## [0.11.4]
 
 ### Fixed
