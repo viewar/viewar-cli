@@ -27,6 +27,7 @@ export default () => {
   checkVersion().then(() => {
     program.version(currentVersion);
     program.option('-l, --log', 'Advanced error logging');
+    program.option('-s, --server', 'Log errors to server');
 
     program
       .command('init [folder] [type] [user-email]')
@@ -71,17 +72,19 @@ export default () => {
     program.parse(process.argv);
 
     logger.advancedLogging = !!program.log;
+    logger.serverLogging = !!program.server;
 
     if (
       !program.commands
         .map(cmd => cmd._name)
         .includes(program.args.map(cmd => cmd && cmd._name).filter(x => x)[0])
     ) {
-      console.error(
-        chalk`{red viewar-cli: '${
-          program.args[0]
-        }' is not a viewar-cli command.}`
-      );
+      if (program.args.length) {
+        logger.logError(
+          `viewar-cli: '${program.args[0]}' is not a viewar-cli command.`,
+          false
+        );
+      }
       program.help();
     }
   });

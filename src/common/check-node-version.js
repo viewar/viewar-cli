@@ -1,4 +1,5 @@
-const chalk = require('chalk');
+import logger from '../logger/logger';
+
 const check = require('check-node-version');
 const process = require('process');
 
@@ -23,12 +24,11 @@ export default () => {
       for (const packageName of Object.keys(results.versions)) {
         if (!results.versions[packageName].isSatisfied) {
           const version = requirements[packageName];
-          console.log(
-            chalk.red.bold(
-              `\Required ${packageName} version ${version} not satisfied with current version ${
-                process.version
-              }. Please update your node.js`
-            )
+          logger.logError(
+            `\Required ${packageName} version ${version} not satisfied with current version ${
+              process.version
+            }. Please update your node.js`,
+            false
           );
         }
       }

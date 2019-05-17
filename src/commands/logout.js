@@ -10,7 +10,8 @@ export default async email => {
 
   if (!email) {
     await exitWithError(
-      'No email address given. Please provide an email address as first argument.'
+      'No email address given. Please provide an email address as first argument.',
+      false
     );
   }
 
@@ -25,7 +26,7 @@ export default async email => {
       config.users[userId] = undefined;
       console.log(`User ${email} logged out.`);
     } else {
-      console.log(`User ${email} is not logged in!`);
+      exitWithError(`User ${email} is not logged in!`);
     }
 
     return config;

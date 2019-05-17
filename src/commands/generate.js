@@ -10,7 +10,7 @@ export default async () => {
   const projectDir = path.resolve(process.cwd());
   const appInfoPath = path.resolve(projectDir, '.viewar-config');
 
-  updateJson(appInfoPath, data =>
+  await updateJson(appInfoPath, data =>
     Object.assign(data, {
       id: generateToken(),
       token: generateToken(),

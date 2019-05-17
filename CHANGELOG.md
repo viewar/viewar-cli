@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added advanced error logging and server logging.
+- Prettify output prints.
 - Improved .viewar-config generation (if npm install fails).
 - Ask for another app ID if entered ID is already existing.
 

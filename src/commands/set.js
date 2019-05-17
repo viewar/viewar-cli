@@ -1,5 +1,6 @@
 const path = require('path');
 import { updateJson } from '../common/json';
+import logger from '../logger/logger';
 
 export default async (appId, appVersion) => {
   logger.setInfo('set', {

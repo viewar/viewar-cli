@@ -4,6 +4,7 @@ const path = require('path');
 const shell = require('shelljs');
 const inquirer = require('inquirer');
 const request = require('request-promise');
+const emojic = require('emojic');
 import login from './login';
 
 import getTemplateConfig from '../common/get-template-config';
@@ -82,7 +83,9 @@ export default async (directory, projectType, userEmail) => {
     );
   }
 
-  console.log(chalk`\nWelcome to ViewAR app initialization process!\n`);
+  console.log(
+    chalk`\n ${emojic.wave} Welcome to ViewAR app initialization process!\n`
+  );
 
   const user = enteredUser
     ? enteredUser
@@ -283,11 +286,11 @@ export default async (directory, projectType, userEmail) => {
     }
   };
 
-  console.log(chalk`\nCreating app...`);
+  console.log(chalk`\n${emojic.pointRight} Creating app...`);
   await createApp();
 
   if (sampleUrl || sample) {
-    console.log(chalk`\nChecking out sample project...`);
+    console.log(chalk`\n${emojic.pointRight} Checking out sample project...`);
 
     const override = overrides['sample/' + (sampleUrl || sample)];
 
@@ -296,11 +299,13 @@ export default async (directory, projectType, userEmail) => {
     } else {
       shell.exec(
         `git clone -b master ${sampleUrl || getRepositoryUrl(sample)} .`,
-        { silent: true }
+        { silent: !logger.advancedLogging }
       );
     }
   } else {
-    console.log(chalk`\nDownloading boilerplate project...`);
+    console.log(
+      chalk`\n${emojic.pointRight} Downloading boilerplate project...`
+    );
 
     const override = overrides['boilerplate/' + type];
 
@@ -308,7 +313,7 @@ export default async (directory, projectType, userEmail) => {
       shell.cp('-rf', `${override}/*`, '.');
     } else {
       shell.exec(`git clone -b master ${getBoilerplateRepositoryUrl(type)} .`, {
-        silent: true,
+        silent: !logger.advancedLogging,
       });
     }
   }
@@ -326,17 +331,19 @@ export default async (directory, projectType, userEmail) => {
     'utf8'
   );
 
-  console.log(chalk`\nInstalling dependencies...`);
+  console.log(chalk`\n${emojic.pointRight} Installing dependencies...`);
 
-  if (shell.exec('npm install', { silent: true }).code !== 0) {
+  if (
+    shell.exec('npm install', { silent: !logger.advancedLogging }).code !== 0
+  ) {
     await exitWithError(
       `Failed installing npm dependencies! Check if npm is installed and up-to-date. Then manually run 'npm install'.`
     );
   }
 
-  console.log(chalk`\nInitializing git repository...`);
+  console.log(chalk`\n${emojic.pointRight} Initializing git repository...`);
 
-  if (shell.exec('git init', { silent: true }).code !== 0) {
+  if (shell.exec('git init', { silent: !logger.advancedLogging }).code !== 0) {
     await exitWithError(
       `Git repository initialization failed! Check if git is installed.`
     );

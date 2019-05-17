@@ -1,5 +1,6 @@
 import { cliConfigPath } from '../common/constants';
 import { readJson } from '../common/json';
+import logger from '../logger/logger';
 
 export default async () => {
   logger.setInfo('whoami');

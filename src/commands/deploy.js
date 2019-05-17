@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const shell = require('shelljs');
 const request = require('request-promise');
+const emojic = require('emojic');
 
 import exitWithError from '../common/exit-with-error';
 import zipDirectory from '../common/zip-dir';
@@ -89,9 +90,9 @@ export default async (appId, appVersion, tags = '') => {
     await exitWithError(authMessage);
   }
 
-  console.log(chalk`\nBundling app...`);
+  console.log(chalk`\n${emojic.pointRight} Bundling app...`);
 
-  shell.exec('npm run build', { silent: true });
+  shell.exec('npm run build', { silent: !logger.advancedLogging });
   if (!fs.existsSync('build')) {
     await exitWithError(
       'No build directory existing. Please run yarn build or npm run build manually to check the error message.'
@@ -107,7 +108,9 @@ export default async (appId, appVersion, tags = '') => {
     "'viewar-api' npm dependency not found! Run 'npm install' to install it."
   );
   const [commit, author, subject] = shell
-    .exec("git log --format='%H||%an <%ae>||%s' HEAD^! | cat", { silent: true })
+    .exec("git log --format='%H||%an <%ae>||%s' HEAD^! | cat", {
+      silent: !logger.advancedLogging,
+    })
     .stdout.trim()
     .split('||');
 
@@ -124,7 +127,7 @@ export default async (appId, appVersion, tags = '') => {
 
   await zipDirectory(buildDir, bundlePath);
 
-  console.log(chalk`\nUploading app bundle...`);
+  console.log(chalk`\n${emojic.pointRight} Uploading app bundle...`);
 
   const formData = {
     id,
@@ -138,7 +141,7 @@ export default async (appId, appVersion, tags = '') => {
   shell.rm('-rf', bundlePath);
   shell.rm('-rf', buildDir);
 
-  console.log(chalk`\nActivating bundle...`);
+  console.log(chalk`\n${emojic.pointRight} Activating bundle...`);
 
   const response = await request
     .post(getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`))
@@ -147,7 +150,7 @@ export default async (appId, appVersion, tags = '') => {
   const { status, message } = response;
 
   if (status === 'ok') {
-    console.log(chalk`\nDone!`);
+    console.log(chalk`\n${emojic.whiteCheckMark} {green Done!}`);
   } else {
     await exitWithError(message);
   }
