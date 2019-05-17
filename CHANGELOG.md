@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.12.0]
+
 - Added advanced error logging and server logging.
 - Prettify output prints.
 - Improved .viewar-config generation (if npm install fails).
