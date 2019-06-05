@@ -86,7 +86,9 @@ export default async (directory, projectType, userEmail) => {
   }
 
   console.log(
-    chalk`\n ${emojic.wave}  Welcome to ViewAR app initialization process!\n`
+    chalk`\n ${
+      emojic.wave
+    }  Welcome to the ViewAR App initialization process!\n`
   );
 
   const user = enteredUser
@@ -100,9 +102,7 @@ export default async (directory, projectType, userEmail) => {
       console.log(`Logged in as: ${user.name} <${user.email}>`);
     } else {
       console.log(
-        `Only one user account found, using this one: ${user.name} <${
-          user.email
-        }>`
+        `Only one user account found. Using: ${user.name} <${user.email}>`
       );
     }
   }
@@ -112,7 +112,8 @@ export default async (directory, projectType, userEmail) => {
     {
       name: 'token',
       type: 'list',
-      message: 'Select the user account for this app:',
+      message:
+        'Select the user account for this app. Navigate through the list with the up/down arrow keys.',
       choices: userList
         .sort((a, b) => {
           // Sort by name (A-Z).
@@ -152,13 +153,13 @@ export default async (directory, projectType, userEmail) => {
     {
       name: 'appId',
       type: 'input',
-      message: 'Enter the app ID:',
+      message: 'Enter the App ID:',
       validate: value => /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value),
     },
     {
       name: 'appVersion',
       type: 'input',
-      message: 'Enter the app version:',
+      message: 'Enter the App version:',
       default: '1.0',
       //validate: (value) => /\d+(?:\.\d+(?:\.\d+)?)?/.test(value),
       validate: value => /\d+(?:\.\d+)?/.test(value),
@@ -211,7 +212,8 @@ export default async (directory, projectType, userEmail) => {
       {
         name: 'trackers',
         type: 'checkbox',
-        message: 'Choose trackers:',
+        message:
+          'Choose one or multiple tracking systems to be used by the App. Navigate through the list with the up/down arrow keys and toggle the options on/off with the space key.',
         choices: [
           {
             name: 'ARKit',
