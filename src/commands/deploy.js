@@ -75,7 +75,7 @@ export default async (appId, appVersion, tags = '') => {
   const user = data.users[ownerId];
 
   if (!user) {
-    await exitWithError(`App owner is not logged in!`);
+    await exitWithError(`App owner is not logged in!`, false);
   }
 
   const authResponse = await request
@@ -87,7 +87,7 @@ export default async (appId, appVersion, tags = '') => {
   const { status: authStatus, message: authMessage } = authResponse;
 
   if (authStatus !== 'ok') {
-    await exitWithError(authMessage);
+    await exitWithError(authMessage, false);
   }
 
   console.log(chalk`\n${emojic.pointRight}  Bundling app...`);
