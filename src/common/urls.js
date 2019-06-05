@@ -30,4 +30,30 @@ export const getBoilerplateRepositoryUrl = name =>
 export const getCliConfigUrl = (templateName, branch = 'master') =>
   `https://raw.githubusercontent.com/viewar/viewar-template-${templateName}/${branch}/.viewar-template-config.json`;
 
+export const getSampleConfigUrl = url => {
+  if (url && url.startsWith('https://github.com')) {
+    /**
+     * Just valid for github.com urls.
+     *
+     * Replace:
+     * - '.git' ending
+     * - 'github.com' with 'raw.githubusercontent.com'
+     *
+     * Add:
+     * - '/master' branch
+     * - '.viewar-template-config.json'
+     *
+     * So basically it outputs 'https://raw.githubusercontent.com/viewar/viewar-boilerplate-joystick-react/master/.viewar-template-config.json' if 'https://github.com/viewar/viewar-boilerplate-joystick-react.git' is given as url input.
+     */
+    return (
+      url
+        .replace(/\.git$/, '')
+        .replace('github.com', 'raw.githubusercontent.com') +
+      '/master/.viewar-template-config.json'
+    );
+  }
+
+  return false;
+};
+
 export const getErrorLogUrl = () => `http://api.viewar.com/api30/log/`;

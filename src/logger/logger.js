@@ -18,7 +18,7 @@ const createLogger = () => {
   };
 
   const logError = (message, showAdvancedHint = true) => {
-    console.error(chalk`{red ${emojic.x} ${message}}`);
+    console.error(chalk`{red ${emojic.x}  ${message}}`);
     if (showAdvancedHint && !advancedLogging) {
       console.log(
         chalk`{yellow ${emojic.warning}  Run with -l for advanced log output.}`

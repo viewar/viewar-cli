@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.12.1]
+
+- Remove zero-width space characters for pasted sample app custom repositories.
+- Read template config for sample app custom repositories (github only).
+- Improved emoji output prints.
+
 ## [0.12.0]
 
 - Added advanced error logging and server logging.

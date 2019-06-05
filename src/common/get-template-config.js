@@ -1,9 +1,7 @@
 const request = require('request-promise');
-import { getCliConfigUrl } from './urls';
 
-export default async sample => {
-  if (sample) {
-    const url = getCliConfigUrl(sample);
+export default async url => {
+  if (url) {
     try {
       const data = await request.get(url);
 

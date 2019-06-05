@@ -15,7 +15,7 @@ export default (timeout = 2000) => {
           chalk.red(
             `${
               emojic.exclamation
-            } Your installed viewar-cli version (${currentVersion}) is not up to date.\nPlease install the latest version (${version}) from npm.\n\thttps://www.npmjs.com/package/viewar-cli.`
+            }  Your installed viewar-cli version (${currentVersion}) is not up to date.\nPlease install the latest version (${version}) from npm.\n\thttps://www.npmjs.com/package/viewar-cli.`
           )
         );
       }

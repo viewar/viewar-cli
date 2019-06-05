@@ -90,7 +90,7 @@ export default async (appId, appVersion, tags = '') => {
     await exitWithError(authMessage);
   }
 
-  console.log(chalk`\n${emojic.pointRight} Bundling app...`);
+  console.log(chalk`\n${emojic.pointRight}  Bundling app...`);
 
   shell.exec('npm run build', { silent: !logger.advancedLogging });
   if (!fs.existsSync('build')) {
@@ -127,7 +127,7 @@ export default async (appId, appVersion, tags = '') => {
 
   await zipDirectory(buildDir, bundlePath);
 
-  console.log(chalk`\n${emojic.pointRight} Uploading app bundle...`);
+  console.log(chalk`\n${emojic.pointRight}  Uploading app bundle...`);
 
   const formData = {
     id,
@@ -141,7 +141,7 @@ export default async (appId, appVersion, tags = '') => {
   shell.rm('-rf', bundlePath);
   shell.rm('-rf', buildDir);
 
-  console.log(chalk`\n${emojic.pointRight} Activating bundle...`);
+  console.log(chalk`\n${emojic.pointRight}  Activating bundle...`);
 
   const response = await request
     .post(getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`))
@@ -150,7 +150,7 @@ export default async (appId, appVersion, tags = '') => {
   const { status, message } = response;
 
   if (status === 'ok') {
-    console.log(chalk`\n${emojic.whiteCheckMark} {green Done!}`);
+    console.log(chalk`\n${emojic.whiteCheckMark}  {green Done!}`);
   } else {
     await exitWithError(message);
   }

@@ -18,7 +18,7 @@ export default async userEmail => {
 
   const validateEmail = value => /.+@.+\..+/.test(value);
 
-  console.log(`${emojic.bustInSilhouette} Log in with your ViewAR account.`);
+  console.log(`${emojic.bustInSilhouette}  Log in with your ViewAR account.`);
   console.log(
     `If you don't have an account, create one at developer.viewar.com.`
   );
@@ -60,7 +60,7 @@ export default async userEmail => {
     console.log(
       chalk`${
         emojic.whiteCheckMark
-      } {green User {bold ${userName} <${email}>} logged in.}`
+      }  {green User {bold ${userName} <${email}>} logged in.}`
     );
   } else {
     await exitWithError(`Authentication failed! (${response.error})`, false);

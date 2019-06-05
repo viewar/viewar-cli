@@ -15,6 +15,8 @@ import {
   createAppUrl,
   getRepositoryUrl,
   getBoilerplateRepositoryUrl,
+  getCliConfigUrl,
+  getSampleConfigUrl,
 } from '../common/urls';
 import {
   cliConfigPath,
@@ -53,7 +55,7 @@ export default async (directory, projectType, userEmail) => {
   const dirEmpty = shell.ls(projectDir).length === 0;
 
   if (!dirEmpty) {
-    await exitWithError('Directory not empty!');
+    await exitWithError(`Directory '${projectDir}' not empty!`, false);
   }
 
   shell.cd(projectDir);
@@ -84,7 +86,7 @@ export default async (directory, projectType, userEmail) => {
   }
 
   console.log(
-    chalk`\n ${emojic.wave} Welcome to ViewAR app initialization process!\n`
+    chalk`\n ${emojic.wave}  Welcome to ViewAR app initialization process!\n`
   );
 
   const user = enteredUser
@@ -163,7 +165,14 @@ export default async (directory, projectType, userEmail) => {
     },
   ]);
 
-  let { token, type, appId, appVersion, sample, sampleUrl } = Object.assign(
+  let {
+    token,
+    type,
+    appId,
+    appVersion,
+    sample,
+    sampleUrl = '',
+  } = Object.assign(
     {
       token: user && user.token,
       type: projectType,
@@ -171,8 +180,13 @@ export default async (directory, projectType, userEmail) => {
     answers
   );
 
+  // Remove zero-width space characters (e.g. when copy-pasted from a pdf).
+  const sanitizedSampleUrl = sampleUrl.replace(/[\u200B-\u200D\uFEFF]/g, '');
+
   // Get template config.
-  let templateConfig = await getTemplateConfig(sample);
+  let templateConfig = await getTemplateConfig(
+    getSampleConfigUrl(sanitizedSampleUrl) || getCliConfigUrl(sample)
+  );
 
   // Get tracking config (if existing in template config) or tracker.
   let trackingAnswer;
@@ -286,25 +300,26 @@ export default async (directory, projectType, userEmail) => {
     }
   };
 
-  console.log(chalk`\n${emojic.pointRight} Creating app...`);
+  console.log(chalk`\n${emojic.pointRight}  Creating app...`);
   await createApp();
 
   if (sampleUrl || sample) {
-    console.log(chalk`\n${emojic.pointRight} Checking out sample project...`);
+    console.log(chalk`\n${emojic.pointRight}  Checking out sample project...`);
 
-    const override = overrides['sample/' + (sampleUrl || sample)];
+    const override = overrides['sample/' + (sanitizedSampleUrl || sample)];
 
     if (override) {
       shell.cp('-rf', `${override}/*`, '.');
     } else {
       shell.exec(
-        `git clone -b master ${sampleUrl || getRepositoryUrl(sample)} .`,
+        `git clone -b master ${sanitizedSampleUrl ||
+          getRepositoryUrl(sample)} .`,
         { silent: !logger.advancedLogging }
       );
     }
   } else {
     console.log(
-      chalk`\n${emojic.pointRight} Downloading boilerplate project...`
+      chalk`\n${emojic.pointRight}  Downloading boilerplate project...`
     );
 
     const override = overrides['boilerplate/' + type];
@@ -331,7 +346,7 @@ export default async (directory, projectType, userEmail) => {
     'utf8'
   );
 
-  console.log(chalk`\n${emojic.pointRight} Installing dependencies...`);
+  console.log(chalk`\n${emojic.pointRight}  Installing dependencies...`);
 
   if (
     shell.exec('npm install', { silent: !logger.advancedLogging }).code !== 0
@@ -341,7 +356,7 @@ export default async (directory, projectType, userEmail) => {
     );
   }
 
-  console.log(chalk`\n${emojic.pointRight} Initializing git repository...`);
+  console.log(chalk`\n${emojic.pointRight}  Initializing git repository...`);
 
   if (shell.exec('git init', { silent: !logger.advancedLogging }).code !== 0) {
     await exitWithError(
