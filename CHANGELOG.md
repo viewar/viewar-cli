@@ -2,16 +2,32 @@
 
 ## [Unreleased]
 
+## [0.13.0]
+
+### Added
+
+- Project type "Angular"
+
 ## [0.12.1]
+
+### Added
 
 - Remove zero-width space characters for pasted sample app custom repositories.
 - Read template config for sample app custom repositories (github only).
+
+### Changed
+
 - Improved emoji output prints.
 
 ## [0.12.0]
 
+### Added
+
 - Added advanced error logging and server logging.
 - Prettify output prints.
+
+### Changed
+
 - Improved .viewar-config generation (if npm install fails).
 - Ask for another app ID if entered ID is already existing.
 

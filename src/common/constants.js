@@ -10,6 +10,7 @@ export const defaultCliConfig = {
 export const projectTypes = {
   'Vanilla Javascript': 'vanilla',
   React: 'react',
+  Angular: 'angular',
   'Sample Project/Template': 'sample',
 };
 
