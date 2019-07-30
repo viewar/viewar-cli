@@ -23,6 +23,14 @@ export default async (appId, appVersion, tags = '') => {
     tags,
   });
 
+  // Show error if app id is set but no app version.
+  if (appId && !appVersion) {
+    await exitWithError(
+      `Missing app version! Syntax: viewar-cli deploy <appId> <appVersion>`,
+      false
+    );
+  }
+
   const appRoot = process.cwd();
   const buildDir = path.resolve(appRoot, 'build') + '/';
   const bundlePath = path.resolve(appRoot, 'bundle.zip');
