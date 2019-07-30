@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.13.1]
+
+### Fixed
+
+- Added a warning if no version is given with deploy.
+
 ## [0.13.0]
 
 ### Added
