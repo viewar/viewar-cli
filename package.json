@@ -1,6 +1,6 @@
 {
   "name": "viewar-cli",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "ViewAR SDK Command Line Interface",
   "main": "dist/index.js",
   "files": [
