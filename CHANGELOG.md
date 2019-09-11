@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.13.2]
+
+### Fixed
+
+- Display validation error message if incorrect App ID or Version string is entered.
+
 ## [0.13.1]
 
 ### Fixed
