@@ -108,63 +108,80 @@ export default async (directory, projectType, userEmail) => {
   }
 
   // Get new app info.
-  const answers = await inquirer.prompt([
-    {
-      name: 'token',
-      type: 'list',
-      message:
-        'Select the user account for this app. Navigate through the list with the up/down arrow keys.',
-      choices: userList
-        .sort((a, b) => {
-          // Sort by name (A-Z).
-          const nameA = a.name.toUpperCase();
-          const nameB = b.name.toUpperCase();
+  const answers = await inquirer.prompt(
+    [
+      {
+        name: 'token',
+        type: 'list',
+        message:
+          'Select the user account for this app. Navigate through the list with the up/down arrow keys.',
+        choices: userList
+          .sort((a, b) => {
+            // Sort by name (A-Z).
+            const nameA = a.name.toUpperCase();
+            const nameB = b.name.toUpperCase();
 
-          return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
-        })
-        .map(({ name, email }) => `${name} <${email}>`),
-      filter: choice =>
-        userList.find(({ name, email }) => `${name} <${email}>` === choice)
-          .token,
-      when: () => !user,
-    },
-    {
-      name: 'type',
-      type: 'list',
-      message: 'Select a project type:',
-      choices: Object.keys(projectTypes),
-      filter: value => projectTypes[value],
-      when: () => !projectType,
-    },
-    {
-      name: 'sample',
-      type: 'list',
-      message: 'Select a template project',
-      choices: Object.keys(sampleProjects),
-      filter: value => sampleProjects[value],
-      when: ({ type }) => type === 'sample', // Adapt this if you change sample project type name in constants.js.
-    },
-    {
-      name: 'sampleUrl',
-      type: 'input',
-      message: 'Repository URL',
-      when: ({ sample }) => sample === sampleProjects['Other...'],
-    },
-    {
-      name: 'appId',
-      type: 'input',
-      message: 'Enter the App ID:',
-      validate: value => /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value),
-    },
-    {
-      name: 'appVersion',
-      type: 'input',
-      message: 'Enter the App version:',
-      default: '1.0',
-      //validate: (value) => /\d+(?:\.\d+(?:\.\d+)?)?/.test(value),
-      validate: value => /\d+(?:\.\d+)?/.test(value),
-    },
-  ]);
+            return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+          })
+          .map(({ name, email }) => `${name} <${email}>`),
+        filter: choice =>
+          userList.find(({ name, email }) => `${name} <${email}>` === choice)
+            .token,
+        when: () => !user,
+      },
+      {
+        name: 'type',
+        type: 'list',
+        message: 'Select a project type:',
+        choices: Object.keys(projectTypes),
+        filter: value => projectTypes[value],
+        when: () => !projectType,
+      },
+      {
+        name: 'sample',
+        type: 'list',
+        message: 'Select a template project',
+        choices: Object.keys(sampleProjects),
+        filter: value => sampleProjects[value],
+        when: ({ type }) => type === 'sample', // Adapt this if you change sample project type name in constants.js.
+      },
+      {
+        name: 'sampleUrl',
+        type: 'input',
+        message: 'Repository URL',
+        when: ({ sample }) => sample === sampleProjects['Other...'],
+      },
+      {
+        name: 'appId',
+        type: 'input',
+        message: 'Enter the App ID:',
+        validate: value => {
+          const success = /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value);
+          if (success) {
+            return true;
+          }
+          return 'Use the characters a-z, A-Z, 0-9 and . as separator';
+        },
+      },
+      {
+        name: 'appVersion',
+        type: 'input',
+        message: 'Enter the App version:',
+        default: '1.0',
+        //validate: (value) => /\d+(?:\.\d+(?:\.\d+)?)?/.test(value),
+        validate: value => {
+          const success = /^\d+(?:\.\d+)+$/.test(value);
+          if (success) {
+            return true;
+          }
+          return 'Use the characters 0-9 and . as separator';
+        },
+      },
+    ],
+    answers => {
+      console.log(answers);
+    }
+  );
 
   let {
     token,
@@ -265,22 +282,33 @@ export default async (directory, projectType, userEmail) => {
         if (result.error === 1) {
           // Error code 1: App already existing. Inquire for new app id and version.
           console.log(
-            chalk`{red App ID ${appId} with version ${appVersion} already existing, please choose another app ID.}`
+            chalk`{red App ID ${appId} with version ${appVersion} already existing, please choose another app ID or version.}`
           );
           const answer = await inquirer.prompt([
             {
               name: 'appId',
               message: 'Enter the app ID:',
               type: 'input',
-              validate: value =>
-                /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value),
+              validate: value => {
+                const success = /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)+$/.test(value);
+                if (success) {
+                  return true;
+                }
+                return 'Use the characters a-z, A-Z, 0-9 and . as separator';
+              },
             },
             {
               name: 'appVersion',
               type: 'input',
               message: 'Enter the app version:',
               default: '1.0',
-              validate: value => /\d+(?:\.\d+)?/.test(value),
+              validate: value => {
+                const success = /^\d+(?:\.\d+)+$/.test(value);
+                if (success) {
+                  return true;
+                }
+                return 'Use the characters 0-9 and . as separator';
+              },
             },
           ]);
           appId = answer.appId;
