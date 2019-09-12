@@ -98,6 +98,10 @@ export default async (appId, appVersion, tags = '') => {
     await exitWithError(authMessage, false);
   }
 
+  console.log(
+    chalk`\n${emojic.informationSource}  Deploying to ${appId} ${appVersion}`
+  );
+
   console.log(chalk`\n${emojic.pointRight}  Bundling app...`);
 
   shell.exec('npm run build', { silent: !logger.advancedLogging });
