@@ -1,5 +1,7 @@
 # ViewAR SDK Command Line Interface
 
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=viewar/viewar-cli)](https://dependabot.com)
+
 ## Getting Started
 
 Before installing the developer tools, you'll need to make sure that you have two prerequisites installed:
