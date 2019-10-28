@@ -7,6 +7,7 @@
     "dist"
   ],
   "scripts": {
+    "preinstall": "npm i check-node-version && check-node-version --package",
     "clean": "rimraf dist",
     "build": "npm run clean; rollup -c",
     "start": "node dist/index.js",
@@ -35,12 +36,12 @@
       "git add"
     ]
   },
-  "engines": {
-    "node": ">=8"
-  },
   "bin": {
     "viewar-cli": "dist/index.js",
     "viewar": "dist/index.js"
+  },
+  "engines": {
+    "node": ">=10"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
