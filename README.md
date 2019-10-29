@@ -1,6 +1,11 @@
 # ViewAR SDK Command Line Interface
 
+[![Build Status](https://travis-ci.com/viewar/viewar-cli.svg?&branch=master)](https://travis-ci.com/viewar/viewar-cli)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=viewar/viewar-cli)](https://dependabot.com)
+[![PRs Welcome][pr-welcome]](http://makeapullrequest.com)
+[![Conventional Commits](https://img.shields.io/badge/✔-Conventional%20Commits-blue.svg)](https://conventionalcommits.org)
+
+[pr-welcome]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 
 ## Getting Started
 
