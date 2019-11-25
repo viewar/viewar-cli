@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "preinstall": "npm i check-node-version && check-node-version --package",
+    "preinstall": "npx check-node-version --package",
     "clean": "rimraf dist",
     "build": "npm run clean && rollup -c",
     "start": "node dist/index.js",
