@@ -25,4 +25,5 @@ install: npm install
 
 script:
   - npm run format
+  - npm run test
   - npm run build
