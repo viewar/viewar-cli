@@ -37,7 +37,7 @@
     ]
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=10.13.0"
   },
   "bin": {
     "viewar-cli": "dist/index.js",
