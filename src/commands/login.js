@@ -20,7 +20,7 @@ export default async userEmail => {
 
   console.log(`${emojic.bustInSilhouette}  Log in with your ViewAR account.`);
   console.log(
-    `If you don't have an account, create one at developer.viewar.com.`
+    `If you don't have an account, you may create one in the ViewAR Developer Portal on portal.viewar.com.`
   );
   const { email = userEmail, password } = await inquirer.prompt([
     {

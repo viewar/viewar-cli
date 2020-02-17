@@ -7,6 +7,10 @@
 
 [pr-welcome]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 
+## About
+
+ViewAR CLI is a command line tool for managing ViewAR Apps creation and deployment. It may be used to initialize a boilerplate Vanilla JavaScript / React project or use one of ViewAR Templates.
+
 ## Getting Started
 
 Before installing the developer tools, you'll need to make sure that you have two prerequisites installed:
@@ -26,9 +30,9 @@ or
 yarn global add viewar-cli
 ```
 
-You'll only need to install this CLI once. It will alert you when it's out of date, and provide instruction on how to update it.
+You only need to install the ViewAR CLI once. It will alert you when it's out of date, and provide instructions on how to update it.
 
-Once installed, the CLI can be used to create a new project by running
+Once installed, the CLI can be used to create a new project by running:
 
 ```
 viewar-cli init PROJECT_NAME
