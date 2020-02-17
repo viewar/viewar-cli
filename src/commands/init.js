@@ -5,8 +5,8 @@ const shell = require('shelljs');
 const inquirer = require('inquirer');
 const request = require('request-promise');
 const emojic = require('emojic');
-import login from './login';
 
+import login from './login';
 import getTemplateConfig from '../common/get-template-config';
 import exitWithError from '../common/exit-with-error';
 import generateToken from '../common/generate-token';
@@ -40,7 +40,7 @@ export default async (directory, projectType, userEmail) => {
 
   if (!shell.which('git')) {
     await exitWithError(
-      'You need to install git first to initialize a new project!'
+      'To initialize a new project, you need to have git installed!'
     );
   }
 
@@ -55,7 +55,10 @@ export default async (directory, projectType, userEmail) => {
   const dirEmpty = shell.ls(projectDir).length === 0;
 
   if (!dirEmpty) {
-    await exitWithError(`Directory '${projectDir}' not empty!`, false);
+    await exitWithError(
+      `Directory '${projectDir}' is not empty! Please choose a different one.`,
+      false
+    );
   }
 
   shell.cd(projectDir);
@@ -81,7 +84,7 @@ export default async (directory, projectType, userEmail) => {
 
   if (userEmail && !enteredUser) {
     await exitWithError(
-      `User with email ${userEmail} is not logged in!  Run viewar-api whoami to see which user accounts are logged in!`
+      `User with email ${userEmail} is not logged in!  Run viewar-cli whoami to see a list of logged in users or run viewar-cli login to login as a different user.`
     );
   }
 
@@ -114,7 +117,7 @@ export default async (directory, projectType, userEmail) => {
         name: 'token',
         type: 'list',
         message:
-          'Select the user account for this app. Navigate through the list with the up/down arrow keys.',
+          'Select the User Account for this App. Navigate through the list with the up/down arrow keys.',
         choices: userList
           .sort((a, b) => {
             // Sort by name (A-Z).
@@ -160,7 +163,7 @@ export default async (directory, projectType, userEmail) => {
           if (success) {
             return true;
           }
-          return 'Use the characters a-z, A-Z, 0-9 and . as separator';
+          return 'Use the characters a-z, A-Z, 0-9 and . as a separator';
         },
       },
       {
@@ -174,7 +177,7 @@ export default async (directory, projectType, userEmail) => {
           if (success) {
             return true;
           }
-          return 'Use the characters 0-9 and . as separator';
+          return 'Use the characters 0-9 and . as a separator';
         },
       },
     ],
@@ -237,9 +240,6 @@ export default async (directory, projectType, userEmail) => {
           },
           {
             name: 'ARCore',
-          },
-          {
-            name: 'Vuforia',
           },
           {
             name: 'Wikitude',
