@@ -8,7 +8,7 @@ export const readJson = async (filename, errorMessage) => {
   } catch (error) {
     await exitWithError(
       errorMessage ||
-        `File ${filename} does not exists or is not valid JSON file!`
+        `File ${filename} does not exist or is not valid JSON file!`
     );
   }
 };
