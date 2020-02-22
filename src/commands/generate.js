@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 
 import generateToken from '../common/generate-token';
@@ -8,7 +9,7 @@ export default async () => {
   logger.setInfo('generate');
 
   const projectDir = path.resolve(process.cwd());
-  const appInfoPath = path.resolve(projectDir, '.viewar-config');
+  let appInfoPath = path.resolve(projectDir, '.viewar-config.json');
 
   await updateJson(appInfoPath, data =>
     Object.assign(data, {

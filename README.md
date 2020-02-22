@@ -44,6 +44,12 @@ When the server has booted, you can access your application by navigating to `ht
 
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Filename changed from viewar-config to viewar-config.json with backwards compatibility and ability to ignore comments in json
+
 ## [0.13.3]
 
 ### Added

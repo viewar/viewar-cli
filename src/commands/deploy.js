@@ -34,7 +34,10 @@ export default async (appId, appVersion, tags = '') => {
   const appRoot = process.cwd();
   const buildDir = path.resolve(appRoot, 'build') + '/';
   const bundlePath = path.resolve(appRoot, 'bundle.zip');
-  const appInfoPath = path.resolve(appRoot, '.viewar-config');
+  let appInfoPath = path.resolve(appRoot, '.viewar-config.json');
+  if (!fs.existsSync(appInfoPath)) {
+    appInfoPath = path.resolve(appRoot, '.viewar-config');
+  }
   const corePackageInfoPath = path.resolve(
     appRoot,
     'node_modules',
@@ -49,10 +52,12 @@ export default async (appId, appVersion, tags = '') => {
   );
   const bundleInfoPath = path.resolve(buildDir, 'bundle-info.json');
 
-  const appInfo = await readJson(
+  const appInfoFile = await readFile(
     appInfoPath,
-    "'.viewar-config' file not found! Working directory does not contain a ViewAR SDK app!"
+    'utf8',
+    "'.viewar-config.json' file not found! Working directory does not contain a ViewAR SDK app!"
   );
+  const appInfo = JSON.parse(JSON.minify(appInfoFile));
   const { id, token } = appInfo;
 
   if (!appId && !appVersion) {
