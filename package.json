@@ -68,7 +68,7 @@
     "archiver": "^3.0.0",
     "chalk": "^3.0.0",
     "check-node-version": "^4.0.1",
-    "commander": "^4.0.1",
+    "commander": "^2.20.0",
     "crypto": "^1.0.1",
     "easy-table": "^1.1.1",
     "emojic": "^1.1.15",

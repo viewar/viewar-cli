@@ -52,12 +52,10 @@ export default async (appId, appVersion, tags = '') => {
   );
   const bundleInfoPath = path.resolve(buildDir, 'bundle-info.json');
 
-  const appInfoFile = await readFile(
+  const appInfo = await readJson(
     appInfoPath,
-    'utf8',
     "'.viewar-config.json' file not found! Working directory does not contain a ViewAR SDK app!"
   );
-  const appInfo = JSON.parse(JSON.minify(appInfoFile));
   const { id, token } = appInfo;
 
   if (!appId && !appVersion) {
