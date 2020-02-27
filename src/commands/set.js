@@ -12,7 +12,7 @@ export default async (appId, appVersion) => {
   const projectDir = path.resolve(process.cwd());
   let cliConfigPath = path.resolve(projectDir, '.viewar-config');
   if (!fs.existsSync(cliConfigPath)) {
-    cliConfigPath = path.resolve(projectDir, '.viewar-config.json');
+    cliConfigPath = path.resolve(projectDir, 'viewar-config.json');
   }
 
   await updateJson(cliConfigPath, data =>

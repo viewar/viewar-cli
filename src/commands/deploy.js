@@ -34,7 +34,7 @@ export default async (appId, appVersion, tags = '') => {
   const appRoot = process.cwd();
   const buildDir = path.resolve(appRoot, 'build') + '/';
   const bundlePath = path.resolve(appRoot, 'bundle.zip');
-  let appInfoPath = path.resolve(appRoot, '.viewar-config.json');
+  let appInfoPath = path.resolve(appRoot, 'viewar-config.json');
   if (!fs.existsSync(appInfoPath)) {
     appInfoPath = path.resolve(appRoot, '.viewar-config');
   }
@@ -54,7 +54,7 @@ export default async (appId, appVersion, tags = '') => {
 
   const appInfo = await readJson(
     appInfoPath,
-    "'.viewar-config.json' file not found! Working directory does not contain a ViewAR SDK app!"
+    "'viewar-config.json' file not found! Working directory does not contain a ViewAR SDK app!"
   );
   const { id, token } = appInfo;
 

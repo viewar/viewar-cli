@@ -9,7 +9,7 @@ export default async () => {
   logger.setInfo('generate');
 
   const projectDir = path.resolve(process.cwd());
-  let appInfoPath = path.resolve(projectDir, '.viewar-config.json');
+  let appInfoPath = path.resolve(projectDir, 'viewar-config.json');
 
   await updateJson(appInfoPath, data =>
     Object.assign(data, {
