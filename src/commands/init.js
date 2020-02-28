@@ -51,7 +51,7 @@ export default async (directory, projectType, userEmail) => {
   }
 
   const packageInfoPath = path.resolve(projectDir, 'package.json');
-  const configPath = path.resolve(projectDir, '.viewar-config');
+  const configPath = path.resolve(projectDir, 'viewar-config.json');
   const dirEmpty = shell.ls(projectDir).length === 0;
 
   if (!dirEmpty) {
@@ -89,9 +89,7 @@ export default async (directory, projectType, userEmail) => {
   }
 
   console.log(
-    chalk`\n ${
-      emojic.wave
-    }  Welcome to the ViewAR App initialization process!\n`
+    chalk`\n ${emojic.wave}  Welcome to the ViewAR App initialization process!\n`
   );
 
   const user = enteredUser
@@ -372,7 +370,7 @@ export default async (directory, projectType, userEmail) => {
 
   fs.writeFileSync(
     '.gitignore',
-    ['.viewar-config', 'node_modules/', 'build/'].join('\n'),
+    ['viewar-config.json', 'node_modules/', 'build/'].join('\n'),
     'utf8'
   );
 
