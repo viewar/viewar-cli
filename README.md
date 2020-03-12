@@ -1,7 +1,6 @@
 # ViewAR SDK Command Line Interface
 
 [![Build Status](https://travis-ci.com/viewar/viewar-cli.svg?&branch=master)](https://travis-ci.com/viewar/viewar-cli)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=viewar/viewar-cli)](https://dependabot.com)
 [![PRs Welcome][pr-welcome]](http://makeapullrequest.com)
 [![Conventional Commits](https://img.shields.io/badge/✔-Conventional%20Commits-blue.svg)](https://conventionalcommits.org)
 
@@ -20,15 +19,7 @@ Before installing the developer tools, you'll need to make sure that you have tw
 
 Next, install the ViewAR CLI – a command-line tool that generates basic boilerplates of new projects with examples.
 
-```
-npm install -g viewar-cli
-```
-
-or
-
-```
-yarn global add viewar-cli
-```
+`npm install -g viewar-cli` or `yarn global add viewar-cli`
 
 You only need to install the ViewAR CLI once. It will alert you when it's out of date, and provide instructions on how to update it.
 
