@@ -40,6 +40,7 @@ When the server has booted, you can access your application by navigating to `ht
 ### Added
 
 - Filename changed from .viewar-config to viewar-config.json with backwards compatibility
+- The command "deploy" returns an error message if an invalid app ID was entered.
 
 ## [0.13.3]
 
