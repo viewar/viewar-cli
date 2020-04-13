@@ -41,6 +41,10 @@ When the server has booted, you can access your application by navigating to `ht
 
 - Filename changed from .viewar-config to viewar-config.json with backwards compatibility
 
+### Fixed
+
+- Handle empty user names in .viewar-config.
+
 ## [0.13.3]
 
 ### Added

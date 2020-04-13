@@ -89,7 +89,9 @@ export default async (directory, projectType, userEmail) => {
   }
 
   console.log(
-    chalk`\n ${emojic.wave}  Welcome to the ViewAR App initialization process!\n`
+    chalk`\n ${
+      emojic.wave
+    }  Welcome to the ViewAR App initialization process!\n`
   );
 
   const user = enteredUser
@@ -119,15 +121,16 @@ export default async (directory, projectType, userEmail) => {
         choices: userList
           .sort((a, b) => {
             // Sort by name (A-Z).
-            const nameA = a.name.toUpperCase();
-            const nameB = b.name.toUpperCase();
+            const nameA = (a.name || 'Unnamed').toUpperCase();
+            const nameB = (b.name || 'Unnamed').toUpperCase();
 
             return nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
           })
           .map(({ name, email }) => `${name} <${email}>`),
         filter: choice =>
-          userList.find(({ name, email }) => `${name} <${email}>` === choice)
-            .token,
+          userList.find(
+            ({ name, email }) => `${name || 'Unnamed'} <${email}>` === choice
+          ).token,
         when: () => !user,
       },
       {
