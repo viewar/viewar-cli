@@ -75,6 +75,10 @@ export default async (appId, appVersion, tags = '') => {
     await exitWithError('Wrong bundle ID or version!');
   }
 
+  if (info.config.storage === 'com.viewar.notfound') {
+    await exitWithError(`A bundle with ID ${appId} was not found!`);
+  }
+
   // Check authentication.
   const timestamp = new Date()
     .toISOString()
