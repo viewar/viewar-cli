@@ -35,7 +35,7 @@ When the server has booted, you can access your application by navigating to `ht
 
 # Changelog
 
-## [Unreleased]
+## [0.14.0]
 
 ### Added
 
