@@ -1,6 +1,14 @@
 # ViewAR SDK Command Line Interface
 
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=viewar/viewar-cli)](https://dependabot.com)
+[![Build Status](https://travis-ci.com/viewar/viewar-cli.svg?&branch=master)](https://travis-ci.com/viewar/viewar-cli)
+[![PRs Welcome][pr-welcome]](http://makeapullrequest.com)
+[![Conventional Commits](https://img.shields.io/badge/✔-Conventional%20Commits-blue.svg)](https://conventionalcommits.org)
+
+[pr-welcome]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
+
+## About
+
+ViewAR CLI is a command line tool for managing ViewAR Apps creation and deployment. It may be used to initialize a boilerplate Vanilla JavaScript / React project or use one of ViewAR Templates.
 
 ## Getting Started
 
@@ -11,19 +19,11 @@ Before installing the developer tools, you'll need to make sure that you have tw
 
 Next, install the ViewAR CLI – a command-line tool that generates basic boilerplates of new projects with examples.
 
-```
-npm install -g viewar-cli
-```
+`npm install -g viewar-cli` or `yarn global add viewar-cli`
 
-or
+You only need to install the ViewAR CLI once. It will alert you when it's out of date, and provide instructions on how to update it.
 
-```
-yarn global add viewar-cli
-```
-
-You'll only need to install this CLI once. It will alert you when it's out of date, and provide instruction on how to update it.
-
-Once installed, the CLI can be used to create a new project by running
+Once installed, the CLI can be used to create a new project by running:
 
 ```
 viewar-cli init PROJECT_NAME
@@ -34,6 +34,16 @@ where `PROJECT_NAME` is the name of your new application. Once it's been created
 When the server has booted, you can access your application by navigating to `http://localhost:8080/` in your web browser. Your application's code can be found in `src/index.js`, and you can learn more about available SDK features by diving into our documentation.
 
 # Changelog
+
+## [0.14.0]
+
+### Added
+
+- Filename changed from .viewar-config to viewar-config.json with backwards compatibility
+
+### Fixed
+
+- Handle empty user names in .viewar-config.
 
 ## [0.13.3]
 

@@ -1,0 +1,46 @@
+cache:
+  npm: true
+  directories:
+    - $HOME/.npm
+    - $HOME/build/$TRAVIS_REPO_SLUG/components/node_modules/
+
+branches:
+  only:
+    - develop
+    - master
+    - latest
+    - next
+  except:
+    - /^v[0-9]+\.[0-9]+$/
+
+language: node_js
+
+node_js:
+  - 12
+  - 11
+  - 10
+
+install: npm install
+script:
+  - npm run format
+  - npm run build
+  - npm run test
+
+env: NODE_ENV=develop
+
+jobs:
+  fast_finish: true
+  allow_failures:
+    - node_js: 10
+    - os: windows
+    # - os: osx
+  include:
+    - os: linux
+      node_js:
+        - 12
+        - 11
+        - 10
+    - os: osx
+      node_js: 12
+    - os: windows
+      node_js: 12
