@@ -1,5 +1,5 @@
 {
-  "name": "viewar-cli",
+  "name": "@viewar/cli",
   "version": "0.14.1",
   "description": "ViewAR SDK Command Line Interface",
   "main": "dist/index.js",
@@ -40,6 +40,7 @@
     "node": ">=10.13.0"
   },
   "bin": {
+    "@viewar/cli": "dist/index.js",
     "viewar-cli": "dist/index.js",
     "viewar": "dist/index.js"
   },

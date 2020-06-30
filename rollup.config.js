@@ -14,7 +14,7 @@ export default {
     banner,
     file: 'dist/index.js',
     format: 'cjs',
-    name: 'viewar-cli',
+    name: '@viewar/cli',
   },
   plugins: [
     shebang(),

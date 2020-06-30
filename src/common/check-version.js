@@ -9,13 +9,11 @@ export default (timeout = 2000) => {
 
   return Promise.race([
     new Promise(resolve => setTimeout(resolve, timeout)),
-    latestVersion('viewar-cli').then(version => {
+    latestVersion('@viewar/cli').then(version => {
       if (!semver.satisfies(currentVersion, `>=${version}`)) {
         console.log(
           chalk.red(
-            `${
-              emojic.exclamation
-            }  Your installed viewar-cli version (${currentVersion}) is not up to date.\nPlease install the latest version (${version}) from npm.\n\thttps://www.npmjs.com/package/viewar-cli.`
+            `${emojic.exclamation}  Your installed @viewar/cli version (${currentVersion}) is not up to date.\nPlease install the latest version (${version}) from npm.\n\thttps://www.npmjs.com/package/@viewar/cli.`
           )
         );
       }

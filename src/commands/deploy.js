@@ -4,6 +4,7 @@ const fs = require('fs');
 const shell = require('shelljs');
 const request = require('request-promise');
 const emojic = require('emojic');
+const program = require('commander');
 
 import exitWithError from '../common/exit-with-error';
 import zipDirectory from '../common/zip-dir';
@@ -15,8 +16,13 @@ import {
 } from '../common/urls';
 import { cliConfigPath } from '../common/constants';
 import logger from '../logger/logger';
+import { exit } from 'process';
 
 export default async (appId, appVersion, tags = '') => {
+  const ci = program.args.ci;
+  console.log(ci, program.args);
+  return;
+
   logger.setInfo('deploy', {
     appId,
     appVersion,
@@ -26,7 +32,7 @@ export default async (appId, appVersion, tags = '') => {
   // Show error if app id is set but no app version.
   if (appId && !appVersion) {
     await exitWithError(
-      `Missing app version! Syntax: viewar-cli deploy <appId> <appVersion>`,
+      `Missing app version! Syntax: @viewar/cli deploy <appId> <appVersion>`,
       false
     );
   }
