@@ -4,6 +4,7 @@ const fs = require('fs');
 const shell = require('shelljs');
 const request = require('request-promise');
 const emojic = require('emojic');
+const program = require('commander');
 
 import exitWithError from '../common/exit-with-error';
 import zipDirectory from '../common/zip-dir';
@@ -15,6 +16,7 @@ import {
 } from '../common/urls';
 import { cliConfigPath } from '../common/constants';
 import logger from '../logger/logger';
+import { getErrorMessage } from '../errors';
 
 export default async (appId, appVersion, tags = '') => {
   logger.setInfo('deploy', {
@@ -26,7 +28,7 @@ export default async (appId, appVersion, tags = '') => {
   // Show error if app id is set but no app version.
   if (appId && !appVersion) {
     await exitWithError(
-      `Missing app version! Syntax: viewar-cli deploy <appId> <appVersion>`,
+      `Missing app version! Syntax: @viewar/cli deploy <appId> <appVersion>`,
       false
     );
   }
@@ -95,14 +97,28 @@ export default async (appId, appVersion, tags = '') => {
 
   const authResponse = await request
     .post(
-      getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`, true)
+      getActivateUrl(
+        user.token,
+        appId,
+        appVersion,
+        `${id}-${timestamp}`,
+        program.force,
+        true
+      )
     )
     .then(JSON.parse);
 
-  const { status: authStatus, message: authMessage } = authResponse;
+  const {
+    status: authStatus,
+    error: authError,
+    message: authMessage,
+  } = authResponse;
 
   if (authStatus !== 'ok') {
-    await exitWithError(authMessage, false);
+    await exitWithError(
+      getErrorMessage(authError, appId, appVersion, authMessage),
+      false
+    );
   }
 
   console.log(
@@ -163,7 +179,15 @@ export default async (appId, appVersion, tags = '') => {
   console.log(chalk`\n${emojic.pointRight}  Activating bundle...`);
 
   const response = await request
-    .post(getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`))
+    .post(
+      getActivateUrl(
+        user.token,
+        appId,
+        appVersion,
+        `${id}-${timestamp}`,
+        program.force
+      )
+    )
     .then(JSON.parse);
 
   const { status, message } = response;

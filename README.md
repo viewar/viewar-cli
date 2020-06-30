@@ -19,14 +19,14 @@ Before installing the developer tools, you'll need to make sure that you have tw
 
 Next, install the ViewAR CLI – a command-line tool that generates basic boilerplates of new projects with examples.
 
-`npm install -g viewar-cli` or `yarn global add viewar-cli`
+`npm install -g @viewar/cli` or `yarn global add @viewar/cli`
 
 You only need to install the ViewAR CLI once. It will alert you when it's out of date, and provide instructions on how to update it.
 
 Once installed, the CLI can be used to create a new project by running:
 
 ```
-viewar-cli init PROJECT_NAME
+@viewar/cli init PROJECT_NAME
 ```
 
 where `PROJECT_NAME` is the name of your new application. Once it's been created and the dependencies are installed, change your working directory to `PROJECT_NAME`, and start the application server by running `npm start` (or `yarn start`).
