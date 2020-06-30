@@ -26,7 +26,7 @@ You only need to install the ViewAR CLI once. It will alert you when it's out of
 Once installed, the CLI can be used to create a new project by running:
 
 ```
-@viewar/cli init PROJECT_NAME
+viewar-cli init PROJECT_NAME
 ```
 
 where `PROJECT_NAME` is the name of your new application. Once it's been created and the dependencies are installed, change your working directory to `PROJECT_NAME`, and start the application server by running `npm start` (or `yarn start`).
@@ -34,6 +34,20 @@ where `PROJECT_NAME` is the name of your new application. Once it's been created
 When the server has booted, you can access your application by navigating to `http://localhost:8080/` in your web browser. Your application's code can be found in `src/index.js`, and you can learn more about available SDK features by diving into our documentation.
 
 # Changelog
+
+## [1.0.1]
+
+### Changed
+
+- Improve some log output.
+
+## [1.0.0]
+
+### Changed
+
+- Command "deploy" is able to create a new app version.
+- Per default overriding of existing app versions is not allowed.
+- App versions can be overridden with --force (-f) argument.
 
 ## [0.14.1]
 

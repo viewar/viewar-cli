@@ -84,7 +84,7 @@ export default async (directory, projectType, userEmail) => {
 
   if (userEmail && !enteredUser) {
     await exitWithError(
-      `User with email ${userEmail} is not logged in!  Run @viewar/cli whoami to see a list of logged in users or run @viewar/cli login to login as a different user.`
+      `User with email ${userEmail} is not logged in!  Run viewar-cli whoami to see a list of logged in users or run viewar-cli login to login as a different user.`
     );
   }
 

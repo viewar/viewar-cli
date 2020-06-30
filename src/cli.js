@@ -85,7 +85,7 @@ export default () => {
     ) {
       if (program.args.length) {
         logger.logError(
-          `@viewar/cli: '${program.args[0]}' is not a @viewar/cli command.`,
+          `@viewar/cli: '${program.args[0]}' is not a viewar-cli command.`,
           false
         );
       }

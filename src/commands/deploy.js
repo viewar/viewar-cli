@@ -28,7 +28,7 @@ export default async (appId, appVersion, tags = '') => {
   // Show error if app id is set but no app version.
   if (appId && !appVersion) {
     await exitWithError(
-      `Missing app version! Syntax: @viewar/cli deploy <appId> <appVersion>`,
+      `Missing app version! Syntax: viewar-cli deploy <appId> <appVersion>`,
       false
     );
   }
