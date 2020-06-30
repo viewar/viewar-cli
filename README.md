@@ -35,9 +35,12 @@ When the server has booted, you can access your application by navigating to `ht
 
 # Changelog
 
+## [0.14.1]
+
 ### Changed
 
 - The command "deploy" returns an error message if an invalid app ID was entered.
+- Fix generate for projects with old .viewar-config syntax.
 
 ## [0.14.0]
 
