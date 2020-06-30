@@ -9,14 +9,22 @@ export default (timeout = 2000) => {
 
   return Promise.race([
     new Promise(resolve => setTimeout(resolve, timeout)),
-    latestVersion('@viewar/cli').then(version => {
-      if (!semver.satisfies(currentVersion, `>=${version}`)) {
-        console.log(
-          chalk.red(
-            `${emojic.exclamation}  Your installed @viewar/cli version (${currentVersion}) is not up to date.\nPlease install the latest version (${version}) from npm.\n\thttps://www.npmjs.com/package/@viewar/cli.`
-          )
-        );
-      }
-    }),
+    latestVersion('@viewar/cli')
+      .then(version => {
+        if (!semver.satisfies(currentVersion, `>=${version}`)) {
+          console.log(
+            chalk.red(
+              `${emojic.exclamation}  Your installed @viewar/cli version (${currentVersion}) is not up to date.\nPlease install the latest version (${version}) from npm.\n\thttps://www.npmjs.com/package/@viewar/cli.`
+            )
+          );
+        }
+      })
+      .catch(e => {
+        // During development a PackageNotFoundError can occur.
+        // Ignore this error and log all others to console.
+        if (e.name !== 'PackageNotFoundError') {
+          console.error(`Unhandled exception in "latest-version".`, e);
+        }
+      }),
   ]);
 };
