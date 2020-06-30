@@ -18,12 +18,15 @@ import { cliConfigPath } from '../common/constants';
 import logger from '../logger/logger';
 import { getErrorMessage } from '../errors';
 
-export default async (appId, appVersion, tags = '', force = false) => {
+export default async (appId, appVersion, tags = '', force = undefined) => {
   logger.setInfo('deploy', {
     appId,
     appVersion,
     tags,
   });
+
+  const useForce =
+    typeof force !== 'object' ? force || program.force : program.force;
 
   // Show error if app id is set but no app version.
   if (appId && !appVersion) {
@@ -102,7 +105,7 @@ export default async (appId, appVersion, tags = '', force = false) => {
         appId,
         appVersion,
         `${id}-${timestamp}`,
-        force || program.force,
+        useForce,
         true
       )
     )
@@ -185,7 +188,7 @@ export default async (appId, appVersion, tags = '', force = false) => {
         appId,
         appVersion,
         `${id}-${timestamp}`,
-        force || program.force
+        useForce
       )
     )
     .then(JSON.parse);
