@@ -9,9 +9,10 @@ export const getActivateUrl = (
   appId,
   version,
   appToken,
+  force = false,
   dryRun = false
 ) =>
-  `http://dev2.viewar.com/api40/activateAppfilesUpload/token:${token}/bundleIdentifier:${appId}/version:${version}/appFiles:${appToken}/dryRun:${dryRun}`;
+  `http://dev2.viewar.com/api40/activateAppfilesUpload/token:${token}/bundleIdentifier:${appId}/version:${version}/appFiles:${appToken}/dryRun:${dryRun}/supportsForce:${true}/force:${force}`;
 
 export const getUploadBundleUrl = () =>
   `http://dev2.viewar.com/api40/appfilesUpload`;

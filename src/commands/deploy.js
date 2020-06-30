@@ -16,13 +16,9 @@ import {
 } from '../common/urls';
 import { cliConfigPath } from '../common/constants';
 import logger from '../logger/logger';
-import { exit } from 'process';
+import { getErrorMessage } from '../errors';
 
 export default async (appId, appVersion, tags = '') => {
-  const ci = program.args.ci;
-  console.log(ci, program.args);
-  return;
-
   logger.setInfo('deploy', {
     appId,
     appVersion,
@@ -101,14 +97,28 @@ export default async (appId, appVersion, tags = '') => {
 
   const authResponse = await request
     .post(
-      getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`, true)
+      getActivateUrl(
+        user.token,
+        appId,
+        appVersion,
+        `${id}-${timestamp}`,
+        program.force,
+        true
+      )
     )
     .then(JSON.parse);
 
-  const { status: authStatus, message: authMessage } = authResponse;
+  const {
+    status: authStatus,
+    error: authError,
+    message: authMessage,
+  } = authResponse;
 
   if (authStatus !== 'ok') {
-    await exitWithError(authMessage, false);
+    await exitWithError(
+      getErrorMessage(authError, appId, appVersion, authMessage),
+      false
+    );
   }
 
   console.log(
@@ -169,7 +179,15 @@ export default async (appId, appVersion, tags = '') => {
   console.log(chalk`\n${emojic.pointRight}  Activating bundle...`);
 
   const response = await request
-    .post(getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`))
+    .post(
+      getActivateUrl(
+        user.token,
+        appId,
+        appVersion,
+        `${id}-${timestamp}`,
+        program.force
+      )
+    )
     .then(JSON.parse);
 
   const { status, message } = response;

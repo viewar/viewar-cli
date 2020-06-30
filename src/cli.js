@@ -29,8 +29,8 @@ export default () => {
     program.option('-l, --log', 'Advanced error logging');
     program.option('-s, --server', 'Log errors to server');
     program.option(
-      '-ci, --ci',
-      'Called from within a CI (special deploy handling)'
+      '-f, --force',
+      'Force deployment of already existing app versions.'
     );
 
     program
