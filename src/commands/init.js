@@ -400,7 +400,7 @@ export default async (directory, projectType, userEmail) => {
     })
   );
 
-  await deploy(appId, appVersion, 'initial');
+  await deploy(appId, appVersion, 'initial', true);
 
   console.log(
     chalk`\n  App bundle ID: {yellow ${appId}} Version: {yellow ${appVersion}}`

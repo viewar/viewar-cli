@@ -18,7 +18,7 @@ import { cliConfigPath } from '../common/constants';
 import logger from '../logger/logger';
 import { getErrorMessage } from '../errors';
 
-export default async (appId, appVersion, tags = '') => {
+export default async (appId, appVersion, tags = '', force = false) => {
   logger.setInfo('deploy', {
     appId,
     appVersion,
@@ -102,7 +102,7 @@ export default async (appId, appVersion, tags = '') => {
         appId,
         appVersion,
         `${id}-${timestamp}`,
-        program.force,
+        force || program.force,
         true
       )
     )
@@ -185,7 +185,7 @@ export default async (appId, appVersion, tags = '') => {
         appId,
         appVersion,
         `${id}-${timestamp}`,
-        program.force
+        force || program.force
       )
     )
     .then(JSON.parse);

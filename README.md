@@ -35,6 +35,12 @@ When the server has booted, you can access your application by navigating to `ht
 
 # Changelog
 
+## [1.0.2]
+
+### Fixed
+
+- Fix "init" deployment.
+
 ## [1.0.1]
 
 ### Changed
