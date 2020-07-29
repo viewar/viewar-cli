@@ -43,6 +43,7 @@ export default async (appId, appVersion, tags = '', force = undefined) => {
   if (!fs.existsSync(appInfoPath)) {
     appInfoPath = path.resolve(appRoot, '.viewar-config');
   }
+  const appPackageInfoPath = path.resolve(appRoot, 'package.json');
   const corePackageInfoPath = path.resolve(
     appRoot,
     'node_modules',
@@ -137,6 +138,7 @@ export default async (appId, appVersion, tags = '', force = undefined) => {
     );
   }
 
+  const appPackageInfo = await readJson(appPackageInfoPath);
   const corePackageInfo = await readJson(
     corePackageInfoPath,
     "'viewar-core' npm dependency not found! Run 'npm install' to install it."
@@ -154,6 +156,7 @@ export default async (appId, appVersion, tags = '', force = undefined) => {
 
   writeJson(bundleInfoPath, {
     tags: tags ? tags.split(',') : [],
+    appVersion: appPackageInfo['version'],
     apiVersion: apiPackageInfo['version'],
     coreVersion: corePackageInfo['version'],
     git: {
