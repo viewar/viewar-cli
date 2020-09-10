@@ -89,9 +89,7 @@ export default async (directory, projectType, userEmail) => {
   }
 
   console.log(
-    chalk`\n ${
-      emojic.wave
-    }  Welcome to the ViewAR App initialization process!\n`
+    chalk`\n ${emojic.wave}  Welcome to the ViewAR App initialization process!\n`
   );
 
   const user = enteredUser
@@ -402,7 +400,7 @@ export default async (directory, projectType, userEmail) => {
     })
   );
 
-  await deploy(appId, appVersion, 'initial');
+  await deploy(appId, appVersion, 'initial', true);
 
   console.log(
     chalk`\n  App bundle ID: {yellow ${appId}} Version: {yellow ${appVersion}}`

@@ -4,6 +4,7 @@ const fs = require('fs');
 const shell = require('shelljs');
 const request = require('request-promise');
 const emojic = require('emojic');
+const program = require('commander');
 
 import exitWithError from '../common/exit-with-error';
 import zipDirectory from '../common/zip-dir';
@@ -15,13 +16,17 @@ import {
 } from '../common/urls';
 import { cliConfigPath } from '../common/constants';
 import logger from '../logger/logger';
+import { getErrorMessage } from '../errors';
 
-export default async (appId, appVersion, tags = '') => {
+export default async (appId, appVersion, tags = '', force = undefined) => {
   logger.setInfo('deploy', {
     appId,
     appVersion,
     tags,
   });
+
+  const useForce =
+    typeof force !== 'object' ? force || program.force : program.force;
 
   // Show error if app id is set but no app version.
   if (appId && !appVersion) {
@@ -38,6 +43,7 @@ export default async (appId, appVersion, tags = '') => {
   if (!fs.existsSync(appInfoPath)) {
     appInfoPath = path.resolve(appRoot, '.viewar-config');
   }
+  const appPackageInfoPath = path.resolve(appRoot, 'package.json');
   const corePackageInfoPath = path.resolve(
     appRoot,
     'node_modules',
@@ -75,6 +81,10 @@ export default async (appId, appVersion, tags = '') => {
     await exitWithError('Wrong bundle ID or version!');
   }
 
+  if (info.config.storage === 'com.viewar.notfound') {
+    await exitWithError(`A bundle with ID ${appId} was not found!`);
+  }
+
   // Check authentication.
   const timestamp = new Date()
     .toISOString()
@@ -91,14 +101,28 @@ export default async (appId, appVersion, tags = '') => {
 
   const authResponse = await request
     .post(
-      getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`, true)
+      getActivateUrl(
+        user.token,
+        appId,
+        appVersion,
+        `${id}-${timestamp}`,
+        useForce,
+        true
+      )
     )
     .then(JSON.parse);
 
-  const { status: authStatus, message: authMessage } = authResponse;
+  const {
+    status: authStatus,
+    error: authError,
+    message: authMessage,
+  } = authResponse;
 
   if (authStatus !== 'ok') {
-    await exitWithError(authMessage, false);
+    await exitWithError(
+      getErrorMessage(authError, appId, appVersion, authMessage),
+      false
+    );
   }
 
   console.log(
@@ -114,6 +138,7 @@ export default async (appId, appVersion, tags = '') => {
     );
   }
 
+  const appPackageInfo = await readJson(appPackageInfoPath);
   const corePackageInfo = await readJson(
     corePackageInfoPath,
     "'viewar-core' npm dependency not found! Run 'npm install' to install it."
@@ -131,6 +156,7 @@ export default async (appId, appVersion, tags = '') => {
 
   writeJson(bundleInfoPath, {
     tags: tags ? tags.split(',') : [],
+    appVersion: appPackageInfo['version'],
     apiVersion: apiPackageInfo['version'],
     coreVersion: corePackageInfo['version'],
     git: {
@@ -159,7 +185,15 @@ export default async (appId, appVersion, tags = '') => {
   console.log(chalk`\n${emojic.pointRight}  Activating bundle...`);
 
   const response = await request
-    .post(getActivateUrl(user.token, appId, appVersion, `${id}-${timestamp}`))
+    .post(
+      getActivateUrl(
+        user.token,
+        appId,
+        appVersion,
+        `${id}-${timestamp}`,
+        useForce
+      )
+    )
     .then(JSON.parse);
 
   const { status, message } = response;

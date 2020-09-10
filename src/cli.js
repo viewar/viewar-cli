@@ -28,6 +28,10 @@ export default () => {
     program.version(currentVersion);
     program.option('-l, --log', 'Advanced error logging');
     program.option('-s, --server', 'Log errors to server');
+    program.option(
+      '-f, --force',
+      'Force deployment of already existing app versions.'
+    );
 
     program
       .command('init [folder] [type] [user-email]')
@@ -81,7 +85,7 @@ export default () => {
     ) {
       if (program.args.length) {
         logger.logError(
-          `viewar-cli: '${program.args[0]}' is not a viewar-cli command.`,
+          `@viewar/cli: '${program.args[0]}' is not a viewar-cli command.`,
           false
         );
       }
