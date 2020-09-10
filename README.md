@@ -35,6 +35,12 @@ When the server has booted, you can access your application by navigating to `ht
 
 # Changelog
 
+## [1.0.5]
+
+### Changed
+
+- Show text message with command "whoami" if no user logged in yet.
+
 ## [1.0.3]
 
 ### Fixed
