@@ -44,18 +44,39 @@ export default async (appId, appVersion, tags = '', force = undefined) => {
     appInfoPath = path.resolve(appRoot, '.viewar-config');
   }
   const appPackageInfoPath = path.resolve(appRoot, 'package.json');
-  const corePackageInfoPath = path.resolve(
+
+  let corePackageInfoPath = path.resolve(
     appRoot,
     'node_modules',
-    'viewar-core',
+    '@viewar/core',
     'package.json'
   );
-  const apiPackageInfoPath = path.resolve(
+
+  if (!fs.existsSync(corePackageInfoPath)) {
+    corePackageInfoPath = path.resolve(
+      appRoot,
+      'node_modules',
+      'viewar-core',
+      'package.json'
+    );
+  }
+
+  let apiPackageInfoPath = path.resolve(
     appRoot,
     'node_modules',
-    'viewar-api',
+    '@viewar/api',
     'package.json'
   );
+
+  if (!fs.existsSync(apiPackageInfoPath)) {
+    apiPackageInfoPath = path.resolve(
+      appRoot,
+      'node_modules',
+      'viewar-api',
+      'package.json'
+    );
+  }
+
   const bundleInfoPath = path.resolve(buildDir, 'bundle-info.json');
 
   const appInfo = await readJson(
@@ -125,6 +146,16 @@ export default async (appId, appVersion, tags = '', force = undefined) => {
     );
   }
 
+  const appPackageInfo = await readJson(appPackageInfoPath);
+  const corePackageInfo = await readJson(
+    corePackageInfoPath,
+    "'@viewar/core' npm dependency not found! Run 'npm install' to install it."
+  );
+  const apiPackageInfo = await readJson(
+    apiPackageInfoPath,
+    "'@viewar/api' npm dependency not found! Run 'npm install' to install it."
+  );
+
   console.log(
     chalk`\n${emojic.informationSource}  Deploying to ${appId} ${appVersion}`
   );
@@ -138,15 +169,6 @@ export default async (appId, appVersion, tags = '', force = undefined) => {
     );
   }
 
-  const appPackageInfo = await readJson(appPackageInfoPath);
-  const corePackageInfo = await readJson(
-    corePackageInfoPath,
-    "'viewar-core' npm dependency not found! Run 'npm install' to install it."
-  );
-  const apiPackageInfo = await readJson(
-    apiPackageInfoPath,
-    "'viewar-api' npm dependency not found! Run 'npm install' to install it."
-  );
   const [commit, author, subject] = shell
     .exec("git log --format='%H||%an <%ae>||%s' HEAD^! | cat", {
       silent: !logger.advancedLogging,
