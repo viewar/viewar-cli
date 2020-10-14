@@ -35,6 +35,12 @@ When the server has booted, you can access your application by navigating to `ht
 
 # Changelog
 
+## [1.1.0]
+
+### Added
+
+- Added support for @viewar/api and @viewar/core.
+
 ## [1.0.5]
 
 ### Changed
